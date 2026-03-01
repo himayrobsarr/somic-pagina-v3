@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logoSomic from "./assets/SOMIC-01.png";
+import whatsappLogo from "./assets/whatsapp.png";
+import useEmblaCarousel from "embla-carousel-react";
 
 type ModuleKey =
   | "inventarios"
@@ -230,7 +232,7 @@ function SectionTitle({
 }) {
   return (
     <div className="text-center">
-      <h2 className="text-2xl md:text-3xl font-extrabold text-neutral-900">
+      <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900">
         {title}
       </h2>
       <div
@@ -765,23 +767,78 @@ function PlansSection({ onOpenDemo }: { onOpenDemo: () => void }) {
 }
 
 function ModulesSection() {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false });
+
+  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
+  const scrollNext = () => emblaApi && emblaApi.scrollNext();
+
   return (
     <section
       id="modulos"
       className="bg-neutral-50 border-y scroll-mt-24"
       style={{ background: BRAND.colors.lightGray }}
     >
-      <div className="mx-auto max-w-6xl px-4 py-14">
+      <div className="mx-auto max-w-5xl px-4 py-14">
         <SectionTitle
           title="Módulos y funcionalidades"
           subtitle="Este es el tercer bloque: módulos con sus iconos."
         />
 
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {/* Carrusel solo en mobile/tablet */}
+        <div className="mt-8 relative md:hidden">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex gap-4">
+              {MODULES.map((m) => (
+                <div
+                  key={m.key}
+                  className="flex-[0_0_85%] rounded-3xl bg-white border p-6 shadow-sm"
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className="h-12 w-12 rounded-2xl flex items-center justify-center"
+                      style={{ background: BRAND.colors.secondary }}
+                      aria-hidden="true"
+                    >
+                      <ModuleIcon k={m.key} />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-sm font-extrabold text-neutral-900">
+                        {m.title}
+                      </div>
+                      <div className="mt-2 text-neutral-700 leading-relaxed">
+                        {m.desc}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={scrollPrev}
+            className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full border bg-white shadow-md text-neutral-700 hover:bg-neutral-50"
+            aria-label="Ver módulos anteriores"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            onClick={scrollNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full border bg-white shadow-md text-neutral-700 hover:bg-neutral-50"
+            aria-label="Ver más módulos"
+          >
+            ›
+          </button>
+        </div>
+
+        {/* Grid más ordenado en desktop */}
+        <div className="mt-10 hidden md:grid md:grid-cols-2 gap-6">
           {MODULES.map((m) => (
             <div
               key={m.key}
-              className="rounded-3xl bg-white border p-6 shadow-sm"
+              className="rounded-3xl bg-white border border-neutral-200 p-6 shadow-md"
             >
               <div className="flex items-start gap-3">
                 <div
@@ -802,6 +859,39 @@ function ModulesSection() {
               </div>
             </div>
           ))}
+
+          {/* CTA de cierre para completar la cuadrícula */}
+          <div className="rounded-3xl bg-neutral-900 text-white p-7 shadow-md md:col-span-2 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <div className="text-sm font-extrabold tracking-wide">
+                ¿Quieres ver más detalles de los módulos?
+              </div>
+              <p className="mt-2 text-sm text-white/80 max-w-xl">
+                Te mostramos cómo se ve {BRAND.nameMain} funcionando con tu tipo de negocio
+                y resolvemos todas tus dudas en una sesión rápida.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={waLink(
+                  BRAND.whatsapp,
+                  `Hola, quiero más detalles de los módulos de ${BRAND.nameMain}`
+                )}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-2xl px-5 py-3 text-sm font-extrabold text-neutral-900"
+                style={{ background: BRAND.colors.yellow }}
+              >
+                Hablar por WhatsApp
+              </a>
+              <a
+                href="#contacto"
+                className="rounded-2xl px-5 py-3 text-sm font-extrabold border border-white/40 text-white"
+              >
+                Ver datos de contacto
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -958,20 +1048,13 @@ function Footer() {
       className="text-white scroll-mt-24"
       style={{ background: "#0066CC" }}
     >
-      <div className="mx-auto max-w-6xl px-4 py-14 grid md:grid-cols-3 gap-10">
+      <div className="mx-auto max-w-4xl px-4 py-12 md:py-14">
         <div>
-          <div className="font-extrabold tracking-wide">{BRAND.nameMain}</div>
-          <p className="mt-3 text-white/85">
-            Gestiona ventas, inventario, compras y contabilidad en una sola
-            plataforma, con control en tiempo real.
-          </p>
-        </div>
+          <div className="font-extrabold tracking-wide text-sm md:text-base">
+            CONTACTO
+          </div>
 
-        <div>
-          <div className="font-extrabold tracking-wide">CONTACTO</div>
-
-          {/* Helpers: iconos consistentes + fila */}
-          <div className="mt-5 space-y-3 text-white/90">
+          <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-x-10 md:gap-y-3 text-white/90">
             <ContactRow
               label="WhatsApp"
               value={BRAND.whatsapp}
@@ -1006,23 +1089,6 @@ function Footer() {
             />
           </div>
         </div>
-
-        <div>
-          <div className="font-extrabold tracking-wide">ACCESOS</div>
-          <div className="mt-3 space-y-2 text-white/90">
-            <a className="underline underline-offset-4" href="#planes">
-              Planes
-            </a>
-            <div className="opacity-60">—</div>
-            <a className="underline underline-offset-4" href="#modulos">
-              Módulos
-            </a>
-            <div className="opacity-60">—</div>
-            <a className="underline underline-offset-4" href="#demo">
-              Demo
-            </a>
-          </div>
-        </div>
       </div>
 
       <div className="border-t border-white/20">
@@ -1046,12 +1112,15 @@ function FloatingButtons({
         href={waLink(BRAND.whatsapp, `Hola, quiero info de ${BRAND.nameMain}`)}
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-5 right-5 h-14 w-14 rounded-full shadow-lg flex items-center justify-center"
-        style={{ background: BRAND.colors.whatsapp }}
+        className="fixed bottom-5 right-5 shadow-lg"
         aria-label="WhatsApp"
         title="WhatsApp"
       >
-        <span className="text-white text-2xl font-extrabold">✆</span>
+        <img
+          src={whatsappLogo}
+          alt="WhatsApp"
+          className="h-12 w-12 object-contain"
+        />
       </a>
 
       <button
