@@ -35,7 +35,7 @@ const BRAND = {
   whatsapp: "3163576348",
   phone: "3157603419",
   email: "ventas@tudominio.com",
-  demoUrl: "",
+  demoUrl: "http://103.30.17.66:8080/MantisFiccDemo/ficc.login",
   colors: {
     primary: "#0066FF",
     secondary: "#3498DB",
@@ -46,6 +46,8 @@ const BRAND = {
     lightGray: "#F5F5F5",
   },
 };
+
+const TRAINING_VIDEO_URL = "https://www.youtube.com/playlist?list=PLRr_PlbAHObYsqtMuG5lqRKW_48BqdTef"; // TODO: Pega aquí el enlace de YouTube: "FICC en acción"
 
 function onlyDigits(s: string) {
   return (s || "").replace(/\D/g, "");
@@ -157,13 +159,13 @@ const PLANS: Plan[] = [
     priceCOP: 219400,
     periodLabel: "mensuales",
     scope: [
-      "Todo lo del plan POS",
       "5 usuarios",
       "Plataforma de capacitación con evaluaciones programadas",
       "Acceso al software por internet",
       "Garantía de funcionabilidad",
       "Soporte de funcionabilidad",
       "Incluye 1.000 facturas POS electrónicas sin costo adicional*",
+      "Todo lo del plan POS",
     ],
     options: [
       "Artículos",
@@ -214,13 +216,6 @@ const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
-const DEMO_STEPS = [
-  "Ingresa al demo desde el enlace (te lo compartirán).",
-  "Usuario: admin",
-  "Clave: mantisw*",
-  "Explora módulos con datos de prueba: Inventarios → POS → Facturación → Reportes.",
-];
-
 /* ------------------------- UI PIECES ------------------------- */
 
 function SectionTitle({
@@ -242,61 +237,6 @@ function SectionTitle({
       {subtitle ? (
         <p className="mt-4 text-neutral-700 max-w-3xl mx-auto">{subtitle}</p>
       ) : null}
-    </div>
-  );
-}
-
-function Modal({
-  open,
-  onClose,
-  title,
-  children,
-}: {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}) {
-  useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose();
-    }
-    if (open) window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
-
-  return (
-    <div className="fixed inset-0 z-[999]">
-      <div
-        className="absolute inset-0 bg-black/50"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      <div className="absolute inset-0 flex items-center justify-center p-4">
-        <div className="w-full max-w-3xl rounded-3xl bg-white shadow-xl border">
-          <div className="p-6 border-b flex items-start justify-between gap-4">
-            <div>
-              <div className="text-xs font-bold tracking-widest text-neutral-500">
-                DEMO
-              </div>
-              <div className="text-xl font-extrabold text-neutral-900">
-                {title}
-              </div>
-            </div>
-            <button
-              className="h-10 w-10 rounded-xl border hover:bg-neutral-50"
-              onClick={onClose}
-              aria-label="Cerrar"
-              title="Cerrar"
-            >
-              ✕
-            </button>
-          </div>
-          <div className="p-6">{children}</div>
-        </div>
-      </div>
     </div>
   );
 }
@@ -332,11 +272,7 @@ function TopBar() {
   );
 }
 
-function Header({
-  onOpenDemo,
-}: {
-  onOpenDemo: () => void;
-}) {
+function Header() {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b">
       <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
@@ -377,13 +313,25 @@ function Header({
         </nav>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenDemo}
+          <a
+            href={BRAND.demoUrl}
+            target="_blank"
+            rel="noreferrer"
             className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
             style={{ background: BRAND.colors.secondary }}
           >
             PROBAR EN VIVO
-          </button>
+          </a>
+          {TRAINING_VIDEO_URL && (
+            <a
+              href={TRAINING_VIDEO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold border border-neutral-300 text-neutral-700 bg-white"
+            >
+              CAPACITACIÓN
+            </a>
+          )}
           <a
             href="#planes"
             className="inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
@@ -589,7 +537,7 @@ function LeadForm() {
   );
 }
 
-function Hero({ onOpenDemo }: { onOpenDemo: () => void }) {
+function Hero() {
   return (
     <section
       id="inicio"
@@ -633,12 +581,14 @@ function Hero({ onOpenDemo }: { onOpenDemo: () => void }) {
             >
               VER PLANES
             </a>
-            <button
-              onClick={onOpenDemo}
+            <a
+              href={BRAND.demoUrl}
+              target="_blank"
+              rel="noreferrer"
               className="rounded-2xl px-5 py-3 font-extrabold bg-white text-neutral-900"
             >
               VER DEMO
-            </button>
+            </a>
           </div>
 
           <div className="mt-6 text-white/80 text-sm">
@@ -662,7 +612,7 @@ function Hero({ onOpenDemo }: { onOpenDemo: () => void }) {
   );
 }
 
-function PlansSection({ onOpenDemo }: { onOpenDemo: () => void }) {
+function PlansSection() {
   return (
     <section id="planes" className="mx-auto max-w-6xl px-4 py-14 scroll-mt-24">
       <SectionTitle
@@ -706,15 +656,23 @@ function PlansSection({ onOpenDemo }: { onOpenDemo: () => void }) {
               <div className="text-xs font-extrabold tracking-widest text-neutral-500">
                 OPCIONES
               </div>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {p.options.map((o) => (
-                  <span
-                    key={o}
-                    className="text-sm px-3 py-1 rounded-full border bg-white"
-                  >
-                    {o}
-                  </span>
-                ))}
+              <div className="mt-3">
+                {p.name.includes("POS + INVENTARIOS") && (
+                  <p className="text-sm text-neutral-700 italic">
+                    Todas las del plan POS y adicionalmente:
+                  </p>
+                )}
+<ul className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-neutral-700">
+  {p.options.map((o) => (
+    <li key={o} className="flex gap-2 items-start">
+      <span
+        className="mt-[6px] h-1.5 w-1.5 rounded-full flex-shrink-0"
+        style={{ background: BRAND.colors.secondary }}
+      />
+      <span className="text-sm leading-snug">{o}</span>
+    </li>
+  ))}
+</ul>
               </div>
             </div>
 
@@ -752,12 +710,24 @@ function PlansSection({ onOpenDemo }: { onOpenDemo: () => void }) {
               >
                 Cotizar por WhatsApp
               </a>
-              <button
-                onClick={onOpenDemo}
+              <a
+                href={BRAND.demoUrl}
+                target="_blank"
+                rel="noreferrer"
                 className="rounded-2xl px-4 py-3 font-extrabold border"
               >
                 Ver demo
-              </button>
+              </a>
+              {TRAINING_VIDEO_URL && (
+                <a
+                  href={TRAINING_VIDEO_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-2xl px-4 py-3 font-extrabold border"
+                >
+                  Capacitación
+                </a>
+              )}
             </div>
           </div>
         ))}
@@ -898,7 +868,7 @@ function ModulesSection() {
   );
 }
 
-function DemoSection({ onOpenDemo }: { onOpenDemo: () => void }) {
+function DemoSection() {
   return (
     <section
       id="demo"
@@ -918,13 +888,25 @@ function DemoSection({ onOpenDemo }: { onOpenDemo: () => void }) {
             de tu negocio puede trabajar conectada y bajo control.
           </p>
         </div>
-        <div className="flex md:justify-end gap-3">
-          <button
-            onClick={onOpenDemo}
+        <div className="flex md:justify-end gap-3 flex-wrap">
+          <a
+            href={BRAND.demoUrl}
+            target="_blank"
+            rel="noreferrer"
             className="rounded-2xl px-5 py-3 font-extrabold text-neutral-900 bg-white"
           >
-            VER PASOS DEL DEMO
-          </button>
+            VER DEMO
+          </a>
+          {TRAINING_VIDEO_URL && (
+            <a
+              href={TRAINING_VIDEO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-2xl px-5 py-3 font-extrabold border border-white/70 text-white"
+            >
+              CAPACITACIÓN
+            </a>
+          )}
         </div>
       </div>
     </section>
@@ -1143,7 +1125,6 @@ function FloatingButtons({
 
 export default function App() {
   const [showTop, setShowTop] = useState(false);
-  const [demoModal, setDemoModal] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 650);
@@ -1155,60 +1136,24 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white text-neutral-900">
       <TopBar />
-      <Header onOpenDemo={() => setDemoModal(true)} />
+      <Header />
 
       {/* Bloque 1: Hero + Formulario */}
-      <Hero onOpenDemo={() => setDemoModal(true)} />
+      <Hero />
 
       {/* Bloque 2: Precios */}
-      <PlansSection onOpenDemo={() => setDemoModal(true)} />
+      <PlansSection />
 
       {/* Bloque 3: Módulos con iconos */}
       <ModulesSection />
 
       {/* Resto */}
-      <DemoSection onOpenDemo={() => setDemoModal(true)} />
+      <DemoSection />
       <TestimonialsSection />
       <FinalCTA />
       <Footer />
 
       <FloatingButtons showTop={showTop} />
-
-      <Modal
-        open={demoModal}
-        onClose={() => setDemoModal(false)}
-        title="Pasos para usar el demo"
-      >
-        <div className="space-y-3 text-neutral-700">
-          <p>
-            Cuando te entreguen el link del demo, lo pegamos en{" "}
-            <code className="px-2 py-1 bg-neutral-100 rounded">BRAND.demoUrl</code>.
-            Mientras tanto, estos son los pasos:
-          </p>
-          <ol className="list-decimal pl-6 space-y-2">
-            {DEMO_STEPS.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ol>
-          <div className="pt-4 flex flex-wrap gap-3">
-            <a
-              href={waLink(BRAND.whatsapp, "Hola, quiero el acceso al demo de FICC POS")}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-2xl px-4 py-3 font-extrabold text-white"
-              style={{ background: BRAND.colors.dark }}
-            >
-              Pedir acceso por WhatsApp
-            </a>
-            <button
-              onClick={() => setDemoModal(false)}
-              className="rounded-2xl px-4 py-3 font-extrabold border"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }
