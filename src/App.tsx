@@ -313,33 +313,16 @@ function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href={BRAND.demoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
-            style={{ background: BRAND.colors.secondary }}
-          >
-            PROBAR EN VIVO
-          </a>
-          {TRAINING_VIDEO_URL && (
-            <a
-              href={TRAINING_VIDEO_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold border border-neutral-300 text-neutral-700 bg-white"
-            >
-              CAPACITACIÓN
-            </a>
-          )}
-          <a
-            href="#planes"
-            className="inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
-            style={{ background: BRAND.colors.dark }}
-          >
-            COMPRAR
-          </a>
-        </div>
+  <a
+    href={BRAND.demoUrl}
+    target="_blank"
+    rel="noreferrer"
+    className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
+    style={{ background: BRAND.colors.secondary }}
+  >
+    PROBAR EN VIVO
+  </a>
+</div>
       </div>
     </header>
   );
@@ -877,8 +860,9 @@ function DemoSection() {
         background: `linear-gradient(90deg, ${BRAND.colors.primary}, ${BRAND.colors.secondary})`,
       }}
     >
-      <div className="mx-auto max-w-6xl px-4 py-14 grid md:grid-cols-3 gap-6 items-center">
-        <div className="md:col-span-2">
+      <div className="mx-auto max-w-6xl px-4 py-20 grid md:grid-cols-2 gap-10 items-center">
+        {/* Texto */}
+        <div>
           <h2 className="text-2xl md:text-3xl font-extrabold">
             Demo – Prueba gratis
           </h2>
@@ -887,26 +871,36 @@ function DemoSection() {
             explora módulos, revisa reportes en tiempo real y mira cómo cada área
             de tu negocio puede trabajar conectada y bajo control.
           </p>
-        </div>
-        <div className="flex md:justify-end gap-3 flex-wrap">
-          <a
-            href={BRAND.demoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-2xl px-5 py-3 font-extrabold text-neutral-900 bg-white"
-          >
-            VER DEMO
-          </a>
-          {TRAINING_VIDEO_URL && (
+
+          <div className="mt-6 flex flex-wrap gap-3">
             <a
-              href={TRAINING_VIDEO_URL}
+              href={BRAND.demoUrl}
               target="_blank"
               rel="noreferrer"
-              className="rounded-2xl px-5 py-3 font-extrabold border border-white/70 text-white"
+              className="rounded-2xl px-5 py-3 font-extrabold text-neutral-900 bg-white"
             >
-              CAPACITACIÓN
+              VER DEMO
             </a>
-          )}
+          </div>
+        </div>
+
+        {/* Placeholder video (solo espacio por ahora) */}
+        <div className="w-full">
+          <div className="rounded-3xl border border-white/25 bg-white/10 overflow-hidden shadow-lg">
+            <div className="aspect-video w-full flex items-center justify-center">
+              <div className="text-center px-6">
+                <div className="text-sm font-extrabold tracking-wide">
+                  ESPACIO PARA VIDEO
+                </div>
+                <div className="mt-2 text-sm text-white/80">
+                  Aquí irá un video de YouTube (próximamente).
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-3 text-xs text-white/70">
+            Recomendación: video en formato 16:9 (YouTube).
+          </div>
         </div>
       </div>
     </section>
