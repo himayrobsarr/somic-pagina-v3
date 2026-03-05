@@ -693,24 +693,6 @@ function PlansSection() {
               >
                 Cotizar por WhatsApp
               </a>
-              <a
-                href={BRAND.demoUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-2xl px-4 py-3 font-extrabold border"
-              >
-                Ver demo
-              </a>
-              {TRAINING_VIDEO_URL && (
-                <a
-                  href={TRAINING_VIDEO_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-2xl px-4 py-3 font-extrabold border"
-                >
-                  Capacitación
-                </a>
-              )}
             </div>
           </div>
         ))}
