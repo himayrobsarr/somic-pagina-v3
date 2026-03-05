@@ -46,8 +46,7 @@ const BRAND = {
     lightGray: "#F5F5F5",
   },
 };
-
-const TRAINING_VIDEO_URL = "https://www.youtube.com/playlist?list=PLRr_PlbAHObYsqtMuG5lqRKW_48BqdTef"; // TODO: Pega aquí el enlace de YouTube: "FICC en acción"
+// TODO: Pega aquí el enlace de YouTube: "FICC en acción"
 
 function onlyDigits(s: string) {
   return (s || "").replace(/\D/g, "");
