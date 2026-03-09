@@ -105,15 +105,6 @@ function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <a
-            href={BRAND.demoUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
-            style={{ background: BRAND.colors.secondary }}
-          >
-            PROBAR EN VIVO
-          </a>
         </div>
       </div>
     </header>
@@ -354,14 +345,14 @@ function Hero() {
             >
               VER PLANES
             </a>
-            <a
+           {/* <a
               href={BRAND.demoUrl}
               target="_blank"
               rel="noreferrer"
               className="rounded-2xl px-5 py-3 font-extrabold bg-white text-neutral-900"
             >
               VER DEMO
-            </a>
+            </a> */}
           </div>
 
           <div className="mt-6 text-white/80 text-sm">
@@ -640,7 +631,7 @@ function DemoSection() {
             de tu negocio puede trabajar conectada y bajo control.
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          {/* <div className="mt-6 flex flex-wrap gap-3">
             <a
               href={BRAND.demoUrl}
               target="_blank"
@@ -649,7 +640,18 @@ function DemoSection() {
             >
               VER DEMO
             </a>
-          </div>
+          </div> */}
+  <div className="mt-5 flex justify-start">
+    <a
+      href="https://calendly.com/comercialsomic/30min"
+      target="_blank"
+      rel="noreferrer"
+      className="rounded-2xl px-6 py-3 font-extrabold text-neutral-900 bg-white hover:opacity-90 transition"
+    >
+      AGENDA TU CITA
+    </a>
+  </div>
+
         </div>
 
         <div className="w-full">
@@ -666,16 +668,7 @@ function DemoSection() {
     </div>
   </div>
 
-  <div className="mt-5 flex justify-center">
-    <a
-      href="https://calendly.com/comercialsomic/30min"
-      target="_blank"
-      rel="noreferrer"
-      className="rounded-2xl px-6 py-3 font-extrabold text-neutral-900 bg-white hover:opacity-90 transition"
-    >
-      AGENDA TU CITA
-    </a>
-  </div>
+
 </div>
       </div>
     </section>
