@@ -653,19 +653,30 @@ function DemoSection() {
         </div>
 
         <div className="w-full">
-          <div className="rounded-3xl border border-white/25 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
-            <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black">
-              <iframe
-                className="h-full w-full"
-                src="https://www.youtube.com/embed/VnFwuNA_rxY"
-                title="Demo FICC POS"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </div>
+  <div className="rounded-3xl border border-white/25 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
+    <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black">
+      <iframe
+        className="h-full w-full"
+        src="https://www.youtube.com/embed/VnFwuNA_rxY"
+        title="Demo FICC POS"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
+    </div>
+  </div>
+
+  <div className="mt-5 flex justify-center">
+    <a
+      href="https://calendly.com/comercialsomic/30min"
+      target="_blank"
+      rel="noreferrer"
+      className="rounded-2xl px-6 py-3 font-extrabold text-neutral-900 bg-white hover:opacity-90 transition"
+    >
+      AGENDA TU CITA
+    </a>
+  </div>
+</div>
       </div>
     </section>
   );

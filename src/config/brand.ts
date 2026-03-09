@@ -6,7 +6,7 @@ export const BRAND = {
     siteUrl: "https://somic.world",
     whatsapp: "3163576348",
     phone: "3157603419",
-    email: "ventas@tudominio.com",
+    email: "ventas@mantisweb.com.co",
     demoUrl: "http://103.30.17.66:8080/MantisFiccDemo/ficc.login",
     colors: {
       primary: "#0066FF",
