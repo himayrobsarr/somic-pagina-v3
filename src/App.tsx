@@ -3,217 +3,10 @@ import logoSomic from "./assets/SOMIC-01.png";
 import whatsappLogo from "./assets/whatsapp.png";
 import useEmblaCarousel from "embla-carousel-react";
 
-type ModuleKey =
-  | "inventarios"
-  | "clientes"
-  | "proveedores"
-  | "facturacion"
-  | "pos"
-  | "contabilidad"
-  | "nomina";
-
-type ModuleItem = { key: ModuleKey; title: string; desc: string };
-
-type Plan = {
-  name: string;
-  priceCOP: number;
-  periodLabel: string;
-  scope: string[];
-  options: string[];
-  extraInfo: string;
-  routePack?: string[];
-};
-
-type Testimonial = { quote: string; author: string; city?: string };
-
-const BRAND = {
-  companyName: "Somic Soluciones S.A.S",
-  productName: "FICC POS",
-  nameMain: "FICC POS",
-  nameTop: "FICC POS",
-  siteUrl: "https://somic.world",
-  whatsapp: "3163576348",
-  phone: "3157603419",
-  email: "ventas@tudominio.com",
-  demoUrl: "http://103.30.17.66:8080/MantisFiccDemo/ficc.login",
-  colors: {
-    primary: "#0066FF",
-    secondary: "#3498DB",
-    dark: "#1A5276",
-    yellow: "#FFD700",
-    whatsapp: "#25D366",
-    grayText: "#666666",
-    lightGray: "#F5F5F5",
-  },
-};
-// TODO: Pega aquí el enlace de YouTube: "FICC en acción"
-
-function onlyDigits(s: string) {
-  return (s || "").replace(/\D/g, "");
-}
-
-function waLink(number: string, text?: string) {
-  const n = onlyDigits(number);
-  const msg = text ? `?text=${encodeURIComponent(text)}` : "";
-  return `https://wa.me/57${n}${msg}`;
-}
-
-function moneyCOP(n: number) {
-  return n.toLocaleString("es-CO", { maximumFractionDigits: 0 });
-}
-
-function cx(...xs: Array<string | false | null | undefined>) {
-  return xs.filter(Boolean).join(" ");
-}
-
-/* ------------------------- DATA ------------------------- */
-
-const NAV = [
-  { label: "INICIO", href: "#inicio" },
-  { label: "PLANES Y PRECIOS", href: "#planes" },
-  { label: "MÓDULOS", href: "#modulos" },
-  { label: "DEMO", href: "#demo" },
-  { label: "CONTACTO", href: "#contacto" },
-] as const;
-
-const MODULES: ModuleItem[] = [
-  {
-    key: "inventarios",
-    title: "INVENTARIOS",
-    desc:
-      "Controla en tiempo real el stock de tus productos, gestiona precios, ajustes, traslados y movimientos de kárdex, con consultas de saldos y existencias, y reportes valorizados para una toma de decisiones precisa y eficiente.",
-  },
-  {
-    key: "clientes",
-    title: "MÓDULO DE CLIENTES",
-    desc:
-      "Crea y gestiona clientes fácilmente, genera recibos de caja en segundos, utiliza cliente rápido para agilizar ventas y mantén bajo control tu cartera general en tiempo real.",
-  },
-  {
-    key: "proveedores",
-    title: "PROVEEDORES",
-    desc:
-      "Ciclo completo de compras, desde la administración de proveedores hasta órdenes de compra, remisiones, devoluciones y actas de recepción, con control de cartera y reportes de rotación.",
-  },
-  {
-    key: "facturacion",
-    title: "MÓDULO DE FACTURACIÓN",
-    desc:
-      "Gestiona las ventas, desde cotizaciones y pedidos hasta remisiones, facturación electrónica y notas crédito/débito, con control de devoluciones y análisis de rentabilidad general.",
-  },
-  {
-    key: "pos",
-    title: "MÓDULO DE POS",
-    desc:
-      "Administra el punto de venta con gestión de cajas, turnos y arqueos, facturación ágil, descuentos programados y control completo de domicilios con asignación de domiciliarios y rutas de entrega.",
-  },
-  {
-    key: "contabilidad",
-    title: "CONTABILIDAD",
-    desc:
-      "Proceso contable completo: configuración del PUC y centros de costos, comprobantes, libros contables y estados financieros, con soporte para información exógena y reportes de balance general, estado de resultados y mayor y balance.",
-  },
-  {
-    key: "nomina",
-    title: "NÓMINA",
-    desc:
-      "Ciclo completo del talento humano: contratos, novedades y ausentismos, liquidación de nómina, prestaciones sociales y cesantías, con soporte para nómina electrónica y contabilización automática.",
-  },
-];
-
-const PLANS: Plan[] = [
-  {
-    name: "POS MENSUAL con Ruta Empresarial",
-    priceCOP: 154500,
-    periodLabel: "mensuales",
-    scope: [
-      "5 usuarios",
-      "Plataforma de capacitación con evaluaciones programadas",
-      "Acceso al software por internet",
-      "Garantía de funcionabilidad",
-      "Soporte de funcionabilidad",
-      "Incluye 1.000 facturas POS electrónicas sin costo adicional*",
-    ],
-    options: [
-      "Cotizaciones",
-      "Pedidos",
-      "Remisiones venta",
-      "Devolución remisiones venta",
-      "Factura",
-      "Nota crédito",
-      "Nota débito",
-      "Suite electrónico",
-    ],
-    extraInfo:
-      "Este plan se debe adquirir mínimo por 3 meses. La firma digital no está incluida y genera un costo adicional. Servicio excluido de IVA. El software se arrienda y vende “como es”. Los planes no tienen permanencia.",
-    routePack: [
-      "Principios y conceptos del modelo empresarial de éxito",
-      "Diagnóstico",
-      "Estrategia de acción inicial",
-      "Optimización de la implementación del POS",
-    ],
-  },
-  {
-    name: "POS + INVENTARIOS con Ruta Empresarial",
-    priceCOP: 219400,
-    periodLabel: "mensuales",
-    scope: [
-      "5 usuarios",
-      "Plataforma de capacitación con evaluaciones programadas",
-      "Acceso al software por internet",
-      "Garantía de funcionabilidad",
-      "Soporte de funcionabilidad",
-      "Incluye 1.000 facturas POS electrónicas sin costo adicional*",
-      "Todo lo del plan POS",
-    ],
-    options: [
-      "Artículos",
-      "Precios",
-      "Ajuste inventario",
-      "Traslados",
-      "Kárdex",
-      "Consulta saldo (básica precios)",
-      "Valorizado de inventario",
-      "Consulta básica existencia",
-      "Reportes",
-    ],
-    extraInfo:
-      "Este plan se debe adquirir mínimo por 3 meses. La firma digital no está incluida y genera un costo adicional. Servicio excluido de IVA. El software se arrienda y vende “como es”. Los planes no tienen permanencia.",
-    routePack: [
-      "Principios y conceptos del modelo empresarial de éxito",
-      "Diagnóstico",
-      "Estrategia de acción inicial",
-      "Optimización de la implementación del POS",
-    ],
-  },
-];
-
-const TESTIMONIALS: Testimonial[] = [
-  {
-    quote:
-      "Con FICC ERP logramos digitalizar toda la operación y centralizar la información en una sola plataforma. Hoy controlamos en tiempo real nuestros puntos de dispensación. Reducimos errores, mejoramos la atención y ganamos control para seguir creciendo con orden y eficiencia.",
-    author: "Julio César Ardila — Director de Calidad, Discolmedica",
-    city: "Neiva, Colombia",
-  },
-  {
-    quote:
-      "Antes teníamos pérdidas de mercancía que no podíamos explicar. Desde que implementamos FICC ERP POS, controlamos el inventario en tiempo real, eliminamos el robo hormiga y dejamos de hacer pedidos innecesarios. En menos de seis meses nuestra rentabilidad creció más del 30%.",
-    author: "Paola León — Administradora, Supermercado Leoncitos",
-    city: "Cúcuta, Colombia",
-  },
-  {
-    quote:
-      "Llevamos más de 30 años trabajando con el ERP y sistema POS… El control de domiciliarios a través de la aplicación nos permitió hacer seguimiento en tiempo real a cada entrega… La agilidad en la facturación marcó una diferencia enorme en la calidad del servicio.",
-    author: "Marco Tulio Jiménez — Representante Legal, Droguería El Lago",
-    city: "Bucaramanga, Colombia",
-  },
-  {
-    quote:
-      "Desde que implementamos FICC ERP, tenemos un control total de nuestra bodega, los despachos y el inventario… La facturación se volvió mucho más ágil y precisa. Hoy sabemos en todo momento qué tenemos en stock y cómo está nuestra rentabilidad.",
-    author: "Oscar Uribe — Representante Legal, Confecciones Julis",
-    city: "Colombia",
-  },
-];
+import { BRAND } from "./config/brand";
+import { NAV, MODULES, PLANS, TESTIMONIALS } from "./config/data";
+import { onlyDigits, waLink, moneyCOP, cx } from "./utils/format";
+import type { ModuleKey } from "./types";
 
 /* ------------------------- UI PIECES ------------------------- */
 
@@ -312,23 +105,22 @@ function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-  <a
-    href={BRAND.demoUrl}
-    target="_blank"
-    rel="noreferrer"
-    className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
-    style={{ background: BRAND.colors.secondary }}
-  >
-    PROBAR EN VIVO
-  </a>
-</div>
+          <a
+            href={BRAND.demoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden sm:inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-white"
+            style={{ background: BRAND.colors.secondary }}
+          >
+            PROBAR EN VIVO
+          </a>
+        </div>
       </div>
     </header>
   );
 }
 
 function ModuleIcon({ k }: { k: ModuleKey }) {
-  // Iconos simples (inline SVG). Sin libs.
   const common = "h-6 w-6";
   const color = "text-white";
 
@@ -536,7 +328,6 @@ function Hero() {
         aria-hidden="true"
       />
       <div className="relative mx-auto max-w-6xl px-4 py-16 grid md:grid-cols-2 gap-10 items-start">
-        {/* Left */}
         <div className="pt-2">
           <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-white/15 text-white">
             <span className="opacity-90">Sistema integrado</span>
@@ -579,7 +370,6 @@ function Hero() {
           </div>
         </div>
 
-        {/* Right = Form (Bloque 1) */}
         <div className="relative">
           <LeadForm />
           <div
@@ -644,17 +434,17 @@ function PlansSection() {
                     Todas las del plan POS y adicionalmente:
                   </p>
                 )}
-<ul className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-neutral-700">
-  {p.options.map((o) => (
-    <li key={o} className="flex gap-2 items-start">
-      <span
-        className="mt-[6px] h-1.5 w-1.5 rounded-full flex-shrink-0"
-        style={{ background: BRAND.colors.secondary }}
-      />
-      <span className="text-sm leading-snug">{o}</span>
-    </li>
-  ))}
-</ul>
+                <ul className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-neutral-700">
+                  {p.options.map((o) => (
+                    <li key={o} className="flex gap-2 items-start">
+                      <span
+                        className="mt-[6px] h-1.5 w-1.5 rounded-full flex-shrink-0"
+                        style={{ background: BRAND.colors.secondary }}
+                      />
+                      <span className="text-sm leading-snug">{o}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
@@ -718,7 +508,6 @@ function ModulesSection() {
           subtitle="Este es el tercer bloque: módulos con sus iconos."
         />
 
-        {/* Carrusel solo en mobile/tablet */}
         <div className="mt-8 relative md:hidden">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex gap-4">
@@ -767,7 +556,6 @@ function ModulesSection() {
           </button>
         </div>
 
-        {/* Grid más ordenado en desktop */}
         <div className="mt-10 hidden md:grid md:grid-cols-2 gap-6">
           {MODULES.map((m) => (
             <div
@@ -794,7 +582,6 @@ function ModulesSection() {
             </div>
           ))}
 
-          {/* CTA de cierre para completar la cuadrícula */}
           <div className="rounded-3xl bg-neutral-900 text-white p-7 shadow-md md:col-span-2 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="text-sm font-extrabold tracking-wide">
@@ -842,11 +629,11 @@ function DemoSection() {
       }}
     >
       <div className="mx-auto max-w-6xl px-4 py-20 grid md:grid-cols-2 gap-10 items-center">
-        {/* Texto */}
         <div>
           <h2 className="text-2xl md:text-3xl font-extrabold">
             Demo – Prueba gratis
           </h2>
+
           <p className="mt-3 text-white/90 leading-relaxed">
             Descubre la experiencia de navegar el sistema {BRAND.nameMain}:
             explora módulos, revisa reportes en tiempo real y mira cómo cada área
@@ -865,22 +652,18 @@ function DemoSection() {
           </div>
         </div>
 
-        {/* Placeholder video (solo espacio por ahora) */}
         <div className="w-full">
-          <div className="rounded-3xl border border-white/25 bg-white/10 overflow-hidden shadow-lg">
-            <div className="aspect-video w-full flex items-center justify-center">
-              <div className="text-center px-6">
-                <div className="text-sm font-extrabold tracking-wide">
-                  ESPACIO PARA VIDEO
-                </div>
-                <div className="mt-2 text-sm text-white/80">
-                  Aquí irá un video de YouTube (próximamente).
-                </div>
-              </div>
+          <div className="rounded-3xl border border-white/25 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
+            <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black">
+              <iframe
+                className="h-full w-full"
+                src="https://www.youtube.com/embed/VnFwuNA_rxY"
+                title="Demo FICC POS"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
             </div>
-          </div>
-          <div className="mt-3 text-xs text-white/70">
-            Recomendación: video en formato 16:9 (YouTube).
           </div>
         </div>
       </div>

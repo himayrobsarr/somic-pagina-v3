@@ -1,0 +1,20 @@
+export const BRAND = {
+    companyName: "Somic Soluciones S.A.S",
+    productName: "FICC POS",
+    nameMain: "FICC POS",
+    nameTop: "FICC POS",
+    siteUrl: "https://somic.world",
+    whatsapp: "3163576348",
+    phone: "3157603419",
+    email: "ventas@tudominio.com",
+    demoUrl: "http://103.30.17.66:8080/MantisFiccDemo/ficc.login",
+    colors: {
+      primary: "#0066FF",
+      secondary: "#3498DB",
+      dark: "#1A5276",
+      yellow: "#FFD700",
+      whatsapp: "#25D366",
+      grayText: "#666666",
+      lightGray: "#F5F5F5",
+    },
+  } as const;
