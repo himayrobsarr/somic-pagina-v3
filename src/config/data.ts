@@ -96,7 +96,6 @@ export const PLANS: Plan[] = [
       "Garantía de funcionabilidad",
       "Soporte de funcionabilidad",
       "Incluye 1.000 facturas POS electrónicas sin costo adicional*",
-      "Todo lo del plan POS",
     ],
     options: [
       "Artículos",
