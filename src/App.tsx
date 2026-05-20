@@ -1,374 +1,394 @@
-import React, { useEffect, useState } from "react";
-import logoSomic from "./assets/SOMIC-01.png";
-import whatsappLogo from "./assets/whatsapp.png";
-import useEmblaCarousel from "embla-carousel-react";
+import { useMemo, useState } from "react";
+import logoRuta from "./assets/logo-ruta-empresarial-horizontal.png";
+import "./App.css";
 
-import { BRAND } from "./config/brand";
-import { NAV, MODULES, PLANS, TESTIMONIALS } from "./config/data";
-import { onlyDigits, waLink, moneyCOP, cx } from "./utils/format";
-import type { ModuleKey } from "./types";
+const CALENDLY_URL = "https://calendly.com/comercialsomic/30min";
+const WHATSAPP_NUMBER = "573157603419";
+const VIDEO_ID = "CyiwIC8laz8";
 
-/* ------------------------- UI PIECES ------------------------- */
+const modules = [
+  {
+    icon: "box",
+    title: "Inventarios",
+    text: "Control en tiempo real de productos, precios, ajustes, traslados, kardex y reconteos valorizados.",
+  },
+  {
+    icon: "users",
+    title: "Clientes",
+    text: "Crea clientes, genera recibos de caja y mantén la cartera de tu negocio visible y organizada.",
+  },
+  {
+    icon: "truck",
+    title: "Proveedores",
+    text: "Gestiona compras, órdenes, remisiones, devoluciones y reportes de rotación desde una sola plataforma.",
+  },
+  {
+    icon: "receipt",
+    title: "Facturación / POS",
+    text: "Cotizaciones, pedidos, facturación electrónica, POS, notas crédito y transmisión directa a la DIAN.",
+  },
+  {
+    icon: "chart",
+    title: "Contabilidad",
+    text: "PUC, comprobantes, libros, información exógena, centros de costos y estados financieros integrados.",
+  },
+  {
+    icon: "wallet",
+    title: "Cartera",
+    text: "Cuentas por cobrar y pagar, vencimientos y reportes para proteger el flujo de caja.",
+  },
+];
 
-function SectionTitle({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle?: string;
-}) {
-  return (
-    <div className="text-center">
-      <h2 className="text-3xl md:text-4xl font-extrabold text-neutral-900">
-        {title}
-      </h2>
-      <div
-        className="mx-auto mt-3 h-1 w-16 rounded-full"
-        style={{ background: BRAND.colors.secondary }}
-      />
-      {subtitle ? (
-        <p className="mt-4 text-neutral-700 max-w-3xl mx-auto">{subtitle}</p>
-      ) : null}
-    </div>
-  );
+const planOne = [
+  "Hasta 5 usuarios simultáneos",
+  "Capacitaciones con evaluaciones programadas",
+  "Acceso al software por internet",
+  "Garantía y soporte de funcionabilidad",
+  "1.000 facturas POS + 200 documentos soporte/mes sin costo adicional",
+  "Firma electrónica y servidor en la nube incluidos",
+  "Ruta Empresarial incluida: diagnóstico, estrategia inicial y optimización de implementación",
+];
+
+const planGrowth = [
+  "Más de 5 usuarios simultáneos",
+  "Mayor volumen de facturación electrónica",
+  "Módulos adicionales según tu operación",
+  "Soporte prioritario según cotización",
+  "Acompañamiento estratégico para empresas en crecimiento",
+];
+
+const testimonials = [
+  {
+    quote:
+      "Con el POS / ERP logramos digitalizar toda la operación y centralizar la información en una sola plataforma. Hoy controlamos inventario, despachos y facturación en tiempo real.",
+    author: "Julio César Ardila",
+    role: "Director de Calidad",
+    place: "Neiva, Colombia",
+  },
+  {
+    quote:
+      "Antes teníamos pérdidas de mercancía que no podíamos explicar. Desde que implementamos el POS / ERP controlamos el inventario en tiempo real y mejoramos la rentabilidad.",
+    author: "Paula León",
+    role: "Administradora",
+    place: "Cúcuta, Colombia",
+  },
+  {
+    quote:
+      "El control de domicilios en tiempo real y el seguimiento al comportamiento del cliente nos dio una diferencia enorme en calidad del servicio.",
+    author: "Marco Tulio Jiménez",
+    role: "Representante Legal",
+    place: "Bucaramanga, Colombia",
+  },
+  {
+    quote:
+      "Ahora tenemos control total de bodega, despachos e inventario. La facturación electrónica integrada con la DIAN nos da tranquilidad.",
+    author: "Oscar Uribe",
+    role: "Representante Legal",
+    place: "Colombia",
+  },
+];
+
+function whatsappLink(message: string) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
-function TopBar() {
+function Icon({ name }: { name: string }) {
+  const common = {
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 2,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  if (name === "box") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path {...common} d="m21 8-9-5-9 5 9 5 9-5Z" />
+        <path {...common} d="M3 8v8l9 5 9-5V8" />
+        <path {...common} d="M12 13v8" />
+      </svg>
+    );
+  }
+
+  if (name === "users") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path {...common} d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
+        <circle {...common} cx="9.5" cy="7" r="4" />
+        <path {...common} d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path {...common} d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    );
+  }
+
+  if (name === "truck") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path {...common} d="M10 17h4V5H2v12h3" />
+        <path {...common} d="M14 17h1m4 0h3v-6l-3-4h-5" />
+        <circle {...common} cx="7.5" cy="17.5" r="2.5" />
+        <circle {...common} cx="17.5" cy="17.5" r="2.5" />
+      </svg>
+    );
+  }
+
+  if (name === "receipt") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path {...common} d="M6 3h12v18l-2-1-2 1-2-1-2 1-2-1-2 1V3Z" />
+        <path {...common} d="M8 8h8M8 12h8M8 16h5" />
+      </svg>
+    );
+  }
+
+  if (name === "chart") {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path {...common} d="M4 19V5" />
+        <path {...common} d="M4 19h16" />
+        <path {...common} d="M8 16v-5M12 16V8M16 16v-7" />
+      </svg>
+    );
+  }
+
   return (
-    <div className="w-full bg-neutral-50 border-b text-neutral-700">
-      <div className="mx-auto max-w-6xl px-4 py-2 text-sm flex flex-wrap items-center justify-between gap-2">
-        <div>
-          ¿Necesitas más información? → WhatsApp:{" "}
-          <span className="font-semibold">{BRAND.whatsapp}</span> o Llámanos:{" "}
-          <span className="font-semibold">{BRAND.phone}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <a
-            className="underline underline-offset-4"
-            href={waLink(BRAND.whatsapp, `Hola, quiero info de ${BRAND.nameMain}`)}
-            target="_blank"
-            rel="noreferrer"
-          >
-            WhatsApp
-          </a>
-          <span className="text-neutral-400">|</span>
-          <a
-            className="underline underline-offset-4"
-            href={`tel:+57${onlyDigits(BRAND.phone)}`}
-          >
-            Llamar
-          </a>
-        </div>
-      </div>
-    </div>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path {...common} d="M20 7H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z" />
+      <path {...common} d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+      <path {...common} d="M12 13h.01" />
+    </svg>
   );
 }
 
 function Header() {
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur border-b">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-4">
-        <a href="#inicio" className="flex items-center gap-3">
-          <img
-            src={logoSomic}
-            alt={BRAND.nameMain}
-            className="h-12 w-auto rounded-xl object-contain bg-white"
-          />
-          <div className="leading-tight">
-            <div
-              className="text-lg font-extrabold tracking-tight"
-              style={{ color: BRAND.colors.primary }}
-            >
-              {BRAND.nameTop}
-            </div>
-            <div className="text-xs text-neutral-600 -mt-0.5">
-              ERP + POS en la nube
-            </div>
-          </div>
+    <header className="site-header">
+      <a className="brand" href="#inicio" aria-label="Ruta Empresarial">
+        <img src={logoRuta} alt="Ruta Empresarial con POS/ERP" />
+      </a>
+      <nav className="main-nav" aria-label="Navegación principal">
+        <a href="#inicio">Inicio</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#pos-erp">POS / ERP</a>
+        <a href="#planes">Planes y Precios</a>
+        <a className="nav-highlight" href="#video">
+          Conoce Ruta Empresarial
         </a>
-
-        <nav className="hidden md:flex items-center gap-3">
-          {NAV.map((it, idx) => (
-            <React.Fragment key={it.href}>
-              <a
-                href={it.href}
-                className="text-sm font-medium text-neutral-700 hover:text-neutral-900"
-                style={{ scrollMarginTop: 92 }}
-              >
-                {it.label}
-              </a>
-              {idx !== NAV.length - 1 ? (
-                <span className="text-neutral-300">|</span>
-              ) : null}
-            </React.Fragment>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-2">
-        </div>
-      </div>
+      </nav>
     </header>
   );
 }
 
-function ModuleIcon({ k }: { k: ModuleKey }) {
-  const common = "h-6 w-6";
-  const color = "text-white";
-
-  switch (k) {
-    case "inventarios":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M4 7h16M6 7v14h12V7M9 7V4h6v3"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    case "clientes":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M16 11a4 4 0 1 0-8 0a4 4 0 0 0 8 0Zm-12 9c1.5-3 5-5 8-5s6.5 2 8 5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    case "proveedores":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M3 17h2l2-8h10l2 8h2M7 9l1-4h8l1 4M6 17a2 2 0 1 0 4 0m8 0a2 2 0 1 0 4 0"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    case "facturacion":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M7 3h10v18l-2-1l-3 1l-3-1l-2 1V3Zm2 5h6M9 12h6M9 16h4"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    case "pos":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M6 6h12v5H6V6Zm0 8h12v5H6v-5Zm3-6h2m-2 10h6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    case "contabilidad":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M4 19V5h16v14H4Zm4-10h8M8 13h8M8 17h5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    case "nomina":
-      return (
-        <svg className={cx(common, color)} viewBox="0 0 24 24" fill="none">
-          <path
-            d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0ZM4 21c1.5-4 5-6 8-6s6.5 2 8 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </svg>
-      );
-    default:
-      return null;
-  }
-}
-
-function LeadForm() {
-  const [form, setForm] = useState({
-    nombre: "",
-    negocio: "",
-    ciudad: "",
-    celular: "",
-    email: "",
-    plan: "POS MENSUAL",
-    mensaje: "",
-  });
-
-  const update = (k: keyof typeof form, v: string) =>
-    setForm((s) => ({ ...s, [k]: v }));
-
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    const text =
-      `Hola, quiero cotizar ${BRAND.nameMain}.%0A%0A` +
-      `Nombre: ${form.nombre}%0A` +
-      `Negocio: ${form.negocio || "N/A"}%0A` +
-      `Ciudad: ${form.ciudad || "N/A"}%0A` +
-      `Celular: ${form.celular}%0A` +
-      `Email: ${form.email || "N/A"}%0A` +
-      `Plan: ${form.plan}%0A` +
-      `Mensaje: ${form.mensaje || "N/A"}`;
-
-    window.open(waLink(BRAND.whatsapp, text.replace(/%0A/g, "\n")), "_blank");
-  }
-
+function MobileActionBar() {
   return (
-    <form
-      onSubmit={onSubmit}
-      className="rounded-3xl bg-white p-6 shadow-xl border"
-    >
-      <div className="text-sm font-extrabold text-neutral-900">
-        Cotiza tu plan aquí
-      </div>
-      <p className="mt-1 text-sm text-neutral-600">
-        Déjanos tus datos y te contactamos por WhatsApp.
-      </p>
-
-      <div className="mt-4 grid gap-3">
-        <input
-          className="h-11 rounded-xl border px-4"
-          placeholder="Nombre"
-          value={form.nombre}
-          onChange={(e) => update("nombre", e.target.value)}
-          required
-        />
-        <input
-          className="h-11 rounded-xl border px-4"
-          placeholder="Negocio / Empresa (opcional)"
-          value={form.negocio}
-          onChange={(e) => update("negocio", e.target.value)}
-        />
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            className="h-11 rounded-xl border px-4"
-            placeholder="Ciudad (opcional)"
-            value={form.ciudad}
-            onChange={(e) => update("ciudad", e.target.value)}
-          />
-          <input
-            className="h-11 rounded-xl border px-4"
-            placeholder="Celular"
-            value={form.celular}
-            onChange={(e) => update("celular", e.target.value)}
-            required
-          />
-        </div>
-        <input
-          className="h-11 rounded-xl border px-4"
-          placeholder="Email (opcional)"
-          value={form.email}
-          onChange={(e) => update("email", e.target.value)}
-        />
-        <select
-          className="h-11 rounded-xl border px-4 bg-white"
-          value={form.plan}
-          onChange={(e) => update("plan", e.target.value)}
-        >
-          <option value="POS MENSUAL">POS MENSUAL</option>
-          <option value="POS + INVENTARIOS">POS + INVENTARIOS</option>
-        </select>
-        <textarea
-          className="min-h-[90px] rounded-xl border px-4 py-3"
-          placeholder="Mensaje (opcional)"
-          value={form.mensaje}
-          onChange={(e) => update("mensaje", e.target.value)}
-        />
-
-        <button
-          type="submit"
-          className="h-11 rounded-2xl font-extrabold text-white"
-          style={{ background: BRAND.colors.dark }}
-        >
-          Enviar y cotizar por WhatsApp
-        </button>
-      </div>
-    </form>
+    <div className="mobile-action-bar" aria-label="Acciones rápidas">
+      <a href="#video">Ver video</a>
+      <a href={CALENDLY_URL} target="_blank" rel="noreferrer">
+        Agendar
+      </a>
+    </div>
   );
 }
 
 function Hero() {
   return (
-    <section
-      id="inicio"
-      className="relative overflow-hidden scroll-mt-24"
-      style={{ background: BRAND.colors.primary }}
-    >
-      <div
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(255,255,255,.25) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.25) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-        aria-hidden="true"
-      />
-      <div className="relative mx-auto max-w-6xl px-4 py-16 grid md:grid-cols-2 gap-10 items-start">
-        <div className="pt-2">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-white/15 text-white">
-            <span className="opacity-90">Sistema integrado</span>
-            <span className="opacity-60">•</span>
-            <span className="opacity-90">Contabilidad + ERP</span>
-          </div>
-
-          <h1 className="mt-4 text-4xl md:text-5xl font-extrabold leading-tight text-white">
-            Sistema POS para negocios y{" "}
-            <span style={{ color: BRAND.colors.yellow }}>pequeñas empresas</span>
+    <section className="hero" id="inicio">
+      <div className="hero-grid" aria-hidden="true" />
+      <div className="hero-inner">
+        <div className="hero-content">
+          <p className="eyebrow">POS / ERP con Ruta Empresarial</p>
+          <h1>
+            Tu negocio creció. Es hora de gestionarlo con{" "}
+            <span>
+              <strong>Ruta</strong>
+              <strong>Empresarial</strong>
+            </span>
           </h1>
-
-          <p className="mt-4 text-white/90 text-lg leading-relaxed">
-            Gestiona ventas, inventario, compras y contabilidad en una sola
-            plataforma. Controla tu negocio en tiempo real, atiende más rápido y
-            toma decisiones basadas en datos precisos.
+          <p className="hero-copy">
+            Tecnología, estructura y acompañamiento para que vendas, factures,
+            controles inventario y tomes decisiones con información clara.
           </p>
-
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href="#planes"
-              className="rounded-2xl px-5 py-3 font-extrabold text-neutral-900"
-              style={{ background: BRAND.colors.yellow }}
-            >
-              VER PLANES
+          <div className="hero-actions">
+            <a className="primary-btn" href="#video">
+              Ver video
             </a>
-           {/* <a
-              href={BRAND.demoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-2xl px-5 py-3 font-extrabold bg-white text-neutral-900"
-            >
-              VER DEMO
-            </a> */}
-          </div>
-
-          <div className="mt-6 text-white/80 text-sm">
-            Nuestro Sistema POS está integrado con la contabilidad y todos los
-            módulos del ERP.
+            <a className="secondary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+              Agendar reunión estratégica
+            </a>
           </div>
         </div>
 
-        <div className="relative">
-          <LeadForm />
-          <div
-            className="mt-6 inline-flex -rotate-6 rounded-2xl px-4 py-2 font-extrabold text-neutral-900"
-            style={{ background: BRAND.colors.yellow }}
-          >
-            ¡PRECIOS 2026 DISPONIBLES!
+        <aside className="hero-panel" aria-label="Resumen Ruta Empresarial">
+          <div className="panel-video-mark">
+            <span>Video VSL</span>
+            <strong>5-6 min</strong>
           </div>
+          <h2>Primero entiende la ruta. Luego eliges el plan.</h2>
+          <p>
+            Ve el video en la página y agenda una reunión para revisar tu caso
+            con un asesor.
+          </p>
+          <div className="panel-steps">
+            <span>Diagnóstico</span>
+            <span>POS / ERP</span>
+            <span>Estrategia</span>
+          </div>
+          <a className="panel-link" href="#video">
+            Conoce Ruta Empresarial
+          </a>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
+function VideoSection() {
+  return (
+    <section className="video-section" id="video">
+      <div className="video-layout">
+        <div className="section-head light">
+          <p className="eyebrow">Conoce Ruta Empresarial</p>
+          <h2>Mira el video antes de elegir tu plan</h2>
+          <p>
+            La idea es que lo veas aquí mismo, sin salir a YouTube, y después
+            puedas agendar una reunión con un asesor.
+          </p>
+          <div className="video-cta">
+            <a className="primary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+              Agendar reunión estratégica
+            </a>
+            <span>Sin compromisos. Revisamos tu caso y te orientamos.</span>
+          </div>
+        </div>
+        <div className="video-frame">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?rel=0&modestbranding=1&playsinline=1`}
+            title="Video Ruta Empresarial"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LeadForm() {
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    company: "",
+    city: "",
+    email: "",
+    users: "",
+  });
+
+  const message = useMemo(
+    () =>
+      [
+        "Hola, vengo de la página web de Ruta Empresarial y quiero más información.",
+        `Nombre: ${form.name || "N/A"}`,
+        `Celular: ${form.phone || "N/A"}`,
+        `Empresa: ${form.company || "N/A"}`,
+        `Ciudad: ${form.city || "N/A"}`,
+        `Email: ${form.email || "N/A"}`,
+        `Usuarios: ${form.users || "N/A"}`,
+      ].join("\n"),
+    [form]
+  );
+
+  function update(field: keyof typeof form, value: string) {
+    setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    window.open(whatsappLink(message), "_blank", "noopener,noreferrer");
+  }
+
+  return (
+    <section className="contact-band" id="contacto">
+      <form className="lead-form" onSubmit={onSubmit}>
+        <div>
+          <p className="eyebrow">Contacto directo</p>
+          <h2>Cuéntanos sobre tu negocio</h2>
+          <p>
+            Déjanos tus datos y un consultor te contactará para revisar cómo
+            Ruta Empresarial puede ayudarte.
+          </p>
+        </div>
+        <div className="form-grid">
+          <input required placeholder="Nombre" value={form.name} onChange={(e) => update("name", e.target.value)} />
+          <input required placeholder="Celular / WhatsApp" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+          <input className="full" placeholder="Nombre del negocio / empresa" value={form.company} onChange={(e) => update("company", e.target.value)} />
+          <input placeholder="Ciudad" value={form.city} onChange={(e) => update("city", e.target.value)} />
+          <input type="email" placeholder="Email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+          <select className="full" value={form.users} onChange={(e) => update("users", e.target.value)}>
+            <option value="">¿Cuántos usuarios tendría el sistema?</option>
+            <option>1 a 2 usuarios</option>
+            <option>3 a 5 usuarios</option>
+            <option>Más de 5 usuarios</option>
+          </select>
+          <button className="whatsapp-btn full" type="submit">
+            Enviar y continuar por WhatsApp
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+}
+
+function ModulesSection() {
+  return (
+    <section className="content-section" id="modulos">
+      <div className="section-head">
+        <p className="eyebrow">Módulos POS / ERP</p>
+        <h2>Todo lo que necesitas para operar tu empresa</h2>
+        <p>
+          Una plataforma accesible desde internet, pensada para ordenar la
+          operación diaria y conectar las áreas clave del negocio.
+        </p>
+      </div>
+      <div className="module-grid">
+        {modules.map((item) => (
+          <article className="module-card" key={item.title}>
+            <div className="icon-box">
+              <Icon name={item.icon} />
+            </div>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function PosErpSection() {
+  return (
+    <section className="split-section" id="pos-erp">
+      <div>
+        <p className="eyebrow">Software + acompañamiento</p>
+        <h2>Ruta Empresarial no es solo un POS</h2>
+        <p>
+          Combina la operación del sistema con una ruta de diagnóstico,
+          estrategia inicial y optimización para que la implementación tenga
+          sentido en el día a día de tu empresa.
+        </p>
+      </div>
+      <div className="proof-list">
+        <div>
+          <strong>1.800+</strong>
+          <span>empresas han usado la plataforma en Colombia</span>
+        </div>
+        <div>
+          <strong>40+</strong>
+          <span>años de desarrollo y evolución del sistema</span>
+        </div>
+        <div>
+          <strong>DIAN</strong>
+          <span>facturación electrónica y documentos soporte integrados</span>
         </div>
       </div>
     </section>
@@ -376,300 +396,101 @@ function Hero() {
 }
 
 function PlansSection() {
+  const [openPlans, setOpenPlans] = useState({
+    standard: false,
+    growth: false,
+  });
+  const standardPreview = planOne.slice(0, 3);
+  const standardMore = planOne.slice(3);
+  const growthPreview = planGrowth.slice(0, 3);
+  const growthMore = planGrowth.slice(3);
+
+  function togglePlan(plan: "standard" | "growth") {
+    setOpenPlans((current) => ({
+      ...current,
+      [plan]: !current[plan],
+    }));
+  }
+
   return (
-    <section id="planes" className="mx-auto max-w-6xl px-4 py-14 scroll-mt-24">
-      <SectionTitle
-        title="Planes y precios"
-        subtitle="Este es el segundo bloque. Elige el plan según tu operación (POS o POS + Inventarios). Cotizamos por WhatsApp."
-      />
-
-      <div className="mt-10 grid md:grid-cols-2 gap-6">
-        {PLANS.map((p) => (
-          <div key={p.name} className="rounded-3xl border p-7 shadow-sm bg-white">
-            <div className="text-sm font-bold text-neutral-600">{p.name}</div>
-
-            <div className="mt-2 flex items-end gap-2">
-              <div
-                className="text-4xl font-extrabold"
-                style={{ color: BRAND.colors.primary }}
-              >
-                ${moneyCOP(p.priceCOP)}
-              </div>
-              <div className="text-neutral-500 pb-1">/{p.periodLabel}</div>
-            </div>
-
-            <div className="mt-6">
-              <div className="text-xs font-extrabold tracking-widest text-neutral-500">
-                ALCANCE DEL PLAN
-              </div>
-              <ul className="mt-3 space-y-2 text-neutral-700">
-                {p.scope.map((b) => (
-                  <li key={b} className="flex gap-2">
-                    <span
-                      className="mt-1 h-2 w-2 rounded-full"
-                      style={{ background: BRAND.colors.secondary }}
-                    />
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-6">
-              <div className="text-xs font-extrabold tracking-widest text-neutral-500">
-                OPCIONES
-              </div>
-              <div className="mt-3">
-                {p.name.includes("POS + INVENTARIOS") && (
-                  <p className="text-sm text-neutral-700 italic">
-                    Todas las del plan POS y adicionalmente:
-                  </p>
-                )}
-                <ul className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-neutral-700">
-                  {p.options.map((o) => (
-                    <li key={o} className="flex gap-2 items-start">
-                      <span
-                        className="mt-[6px] h-1.5 w-1.5 rounded-full flex-shrink-0"
-                        style={{ background: BRAND.colors.secondary }}
-                      />
-                      <span className="text-sm leading-snug">{o}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {p.routePack?.length ? (
-              <div className="mt-6 rounded-2xl border bg-neutral-50 p-4">
-                <div className="text-xs font-extrabold tracking-widest text-neutral-500">
-                  RUTA EMPRESARIAL (INCLUIDA)
-                </div>
-                <ul className="mt-3 space-y-2 text-neutral-700">
-                  {p.routePack.map((b) => (
-                    <li key={b} className="flex gap-2">
-                      <span
-                        className="mt-1 h-2 w-2 rounded-full"
-                        style={{ background: BRAND.colors.dark }}
-                      />
-                      <span>{b}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : null}
-
-            <div className="mt-5 text-sm text-neutral-500">{p.extraInfo}</div>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href={waLink(
-                  BRAND.whatsapp,
-                  `Hola, quiero cotizar el plan: ${p.name}`
-                )}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-2xl px-4 py-3 font-extrabold text-white"
-                style={{ background: BRAND.colors.secondary }}
-              >
-                Cotizar por WhatsApp
-              </a>
-            </div>
-          </div>
-        ))}
+    <section className="plans-section" id="planes">
+      <div className="section-head">
+        <p className="eyebrow">Planes y Precios</p>
+        <h2>POS / ERP con Ruta Empresarial</h2>
+        <p>Elige el plan según el tamaño y las necesidades de tu empresa.</p>
       </div>
-    </section>
-  );
-}
-
-function ModulesSection() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", loop: false });
-
-  const scrollPrev = () => emblaApi && emblaApi.scrollPrev();
-  const scrollNext = () => emblaApi && emblaApi.scrollNext();
-
-  return (
-    <section
-      id="modulos"
-      className="bg-neutral-50 border-y scroll-mt-24"
-      style={{ background: BRAND.colors.lightGray }}
-    >
-      <div className="mx-auto max-w-5xl px-4 py-14">
-        <SectionTitle
-          title="Módulos y funcionalidades"
-          subtitle="Este es el tercer bloque: módulos con sus iconos."
-        />
-
-        <div className="mt-8 relative md:hidden">
-          <div className="overflow-hidden" ref={emblaRef}>
-            <div className="flex gap-4">
-              {MODULES.map((m) => (
-                <div
-                  key={m.key}
-                  className="flex-[0_0_85%] rounded-3xl bg-white border p-6 shadow-sm"
-                >
-                  <div className="flex items-start gap-3">
-                    <div
-                      className="h-12 w-12 rounded-2xl flex items-center justify-center"
-                      style={{ background: BRAND.colors.secondary }}
-                      aria-hidden="true"
-                    >
-                      <ModuleIcon k={m.key} />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-sm font-extrabold text-neutral-900">
-                        {m.title}
-                      </div>
-                      <div className="mt-2 text-neutral-700 leading-relaxed">
-                        {m.desc}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      <div className="plans-grid">
+        <article className={`plan-card featured ${openPlans.standard ? "is-expanded" : ""}`}>
+          <span className="plan-pill">Más popular</span>
+          <h3>POS / ERP contable con Ruta Empresarial</h3>
+          <div className="price">$950.000</div>
+          <p className="period">mensuales · hasta 5 usuarios</p>
+          <ul>
+            {standardPreview.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <div className={`plan-extra ${openPlans.standard ? "open" : ""}`}>
+            <ul>
+              {standardMore.map((item) => (
+                <li key={item}>{item}</li>
               ))}
-            </div>
+            </ul>
           </div>
-
           <button
+            className="plan-toggle"
             type="button"
-            onClick={scrollPrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full border bg-white shadow-md text-neutral-700 hover:bg-neutral-50"
-            aria-label="Ver módulos anteriores"
+            onClick={() => togglePlan("standard")}
+            aria-expanded={openPlans.standard}
           >
-            ‹
+            <span>{openPlans.standard ? "Ver menos" : "Ver todo lo incluido"}</span>
+            <span aria-hidden="true">{openPlans.standard ? "↑" : "↓"}</span>
           </button>
-          <button
-            type="button"
-            onClick={scrollNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-full border bg-white shadow-md text-neutral-700 hover:bg-neutral-50"
-            aria-label="Ver más módulos"
-          >
-            ›
-          </button>
-        </div>
-
-        <div className="mt-10 hidden md:grid md:grid-cols-2 gap-6">
-          {MODULES.map((m) => (
-            <div
-              key={m.key}
-              className="rounded-3xl bg-white border border-neutral-200 p-6 shadow-md"
-            >
-              <div className="flex items-start gap-3">
-                <div
-                  className="h-12 w-12 rounded-2xl flex items-center justify-center"
-                  style={{ background: BRAND.colors.secondary }}
-                  aria-hidden="true"
-                >
-                  <ModuleIcon k={m.key} />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-extrabold text-neutral-900">
-                    {m.title}
-                  </div>
-                  <div className="mt-2 text-neutral-700 leading-relaxed">
-                    {m.desc}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <div className="rounded-3xl bg-neutral-900 text-white p-7 shadow-md md:col-span-2 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <div className="text-sm font-extrabold tracking-wide">
-                ¿Quieres ver más detalles de los módulos?
-              </div>
-              <p className="mt-2 text-sm text-white/80 max-w-xl">
-                Te mostramos cómo se ve {BRAND.nameMain} funcionando con tu tipo de negocio
-                y resolvemos todas tus dudas en una sesión rápida.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={waLink(
-                  BRAND.whatsapp,
-                  `Hola, quiero más detalles de los módulos de ${BRAND.nameMain}`
-                )}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-2xl px-5 py-3 text-sm font-extrabold text-neutral-900"
-                style={{ background: BRAND.colors.yellow }}
-              >
-                Hablar por WhatsApp
-              </a>
-              <a
-                href="#contacto"
-                className="rounded-2xl px-5 py-3 text-sm font-extrabold border border-white/40 text-white"
-              >
-                Ver datos de contacto
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function DemoSection() {
-  return (
-    <section
-      id="demo"
-      className="text-white scroll-mt-24"
-      style={{
-        background: `linear-gradient(90deg, ${BRAND.colors.primary}, ${BRAND.colors.secondary})`,
-      }}
-    >
-      <div className="mx-auto max-w-6xl px-4 py-20 grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h2 className="text-2xl md:text-3xl font-extrabold">
-            Demo – Prueba gratis
-          </h2>
-
-          <p className="mt-3 text-white/90 leading-relaxed">
-            Descubre la experiencia de navegar el sistema {BRAND.nameMain}:
-            explora módulos, revisa reportes en tiempo real y mira cómo cada área
-            de tu negocio puede trabajar conectada y bajo control.
+          <a className="primary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            Agendar reunión estratégica
+          </a>
+          <p className="note">
+            Servicio excluido de IVA. Software en arriendo de licencia. Sin
+            permanencia mínima.
           </p>
-
-          {/* <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href={BRAND.demoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-2xl px-5 py-3 font-extrabold text-neutral-900 bg-white"
-            >
-              VER DEMO
-            </a>
-          </div> */}
-  <div className="mt-5 flex justify-start">
-    <a
-      href="https://calendly.com/comercialsomic/30min"
-      target="_blank"
-      rel="noreferrer"
-      className="rounded-2xl px-6 py-3 font-extrabold text-neutral-900 bg-white hover:opacity-90 transition"
-    >
-      AGENDA TU CITA
-    </a>
-  </div>
-
-        </div>
-
-        <div className="w-full">
-  <div className="rounded-3xl border border-white/25 bg-white/10 p-3 shadow-2xl backdrop-blur-sm">
-    <div className="aspect-video w-full overflow-hidden rounded-2xl bg-black">
-      <iframe
-        className="h-full w-full"
-        src="https://www.youtube.com/embed/VnFwuNA_rxY"
-        title="Demo FICC POS"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      />
-    </div>
-  </div>
-
-
-</div>
+        </article>
+        <article className={`plan-card dark ${openPlans.growth ? "is-expanded" : ""}`}>
+          <h3>Plan para empresas en crecimiento</h3>
+          <div className="price">Adaptado a tu operación</div>
+          <p className="period">Precio según usuarios, módulos y escala</p>
+          <ul>
+            {growthPreview.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <div className={`plan-extra ${openPlans.growth ? "open" : ""}`}>
+            <ul>
+              {growthMore.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+          <button
+            className="plan-toggle"
+            type="button"
+            onClick={() => togglePlan("growth")}
+            aria-expanded={openPlans.growth}
+          >
+            <span>{openPlans.growth ? "Ver menos" : "Ver detalles"}</span>
+            <span aria-hidden="true">{openPlans.growth ? "↑" : "↓"}</span>
+          </button>
+          <a
+            className="primary-btn"
+            href={whatsappLink(
+              "Hola, vengo de la página web de Ruta Empresarial. Me interesa el plan para empresas en crecimiento."
+            )}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Hablemos de tu caso
+          </a>
+          <p className="note">Cotización sin costo. Sin permanencia mínima.</p>
+        </article>
       </div>
     </section>
   );
@@ -677,245 +498,86 @@ function DemoSection() {
 
 function TestimonialsSection() {
   return (
-    <section className="bg-neutral-50 border-y">
-      <div className="mx-auto max-w-6xl px-4 py-14">
-        <SectionTitle title="Los empresarios confían en nosotros" />
-
-        <div className="mt-10 grid md:grid-cols-2 gap-6">
-          {TESTIMONIALS.map((t, i) => (
-            <div
-              key={i}
-              className="rounded-3xl bg-white border p-7 shadow-sm"
-            >
-              <div className="text-sm text-neutral-500">⭐⭐⭐⭐⭐</div>
-              <p className="mt-4 text-neutral-800 leading-relaxed">
-                “{t.quote}”
-              </p>
-              <div
-                className="mt-5 font-extrabold"
-                style={{ color: BRAND.colors.primary }}
-              >
-                {t.author}
-              </div>
-              {t.city ? (
-                <div className="text-sm text-neutral-500 mt-1">{t.city}</div>
-              ) : null}
-            </div>
-          ))}
-        </div>
+    <section className="content-section testimonials">
+      <div className="section-head">
+        <p className="eyebrow">Los empresarios confían en nosotros</p>
+        <h2>Resultados reales en negocios reales</h2>
+      </div>
+      <div className="testimonial-grid">
+        {testimonials.map((item) => (
+          <article className="testimonial-card" key={item.author}>
+            <div className="stars">★★★★★</div>
+            <p>“{item.quote}”</p>
+            <strong>{item.author}</strong>
+            <span>
+              {item.role} · {item.place}
+            </span>
+          </article>
+        ))}
       </div>
     </section>
   );
 }
 
-function FinalCTA() {
+function FinalCta() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-14">
-      <div className="rounded-3xl border p-10 bg-white relative overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage:
-              `radial-gradient(circle at 20% 20%, ${BRAND.colors.primary} 0, transparent 35%), ` +
-              `radial-gradient(circle at 80% 30%, ${BRAND.colors.secondary} 0, transparent 40%), ` +
-              `radial-gradient(circle at 50% 90%, ${BRAND.colors.yellow} 0, transparent 45%)`,
-          }}
-          aria-hidden="true"
-        />
-        <div className="relative">
-          <h2
-            className="text-2xl md:text-3xl font-extrabold"
-            style={{ color: BRAND.colors.primary }}
+    <section className="final-cta">
+      <div>
+        <h2>¿Listo para dirigir tu negocio con claridad y estructura?</h2>
+        <p>
+          Agenda una reunión estratégica y descubre cómo Ruta Empresarial puede
+          transformar la gestión de tu empresa.
+        </p>
+        <div className="hero-actions centered">
+          <a className="primary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            Agendar reunión estratégica
+          </a>
+          <a
+            className="secondary-btn"
+            href={whatsappLink(
+              "Hola, vengo de la página web de Ruta Empresarial y quiero más información."
+            )}
+            target="_blank"
+            rel="noreferrer"
           >
-            ¿Ya tienes tu negocio? Empieza aquí
-          </h2>
-          <p className="mt-3 text-neutral-700">
-            Controla tu punto de venta desde la nube con {BRAND.nameMain}.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a
-              href={waLink(
-                BRAND.whatsapp,
-                `Hola, quiero empezar con ${BRAND.nameMain}`
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-2xl px-5 py-3 font-extrabold text-white"
-              style={{ background: BRAND.colors.dark }}
-            >
-              Comenzar
-            </a>
-            <a
-              href="#planes"
-              className="rounded-2xl px-5 py-3 font-extrabold border"
-            >
-              Ver planes
-            </a>
-          </div>
+            Escribir por WhatsApp
+          </a>
         </div>
       </div>
     </section>
   );
-}
-
-function ContactRow({
-  label,
-  value,
-  href,
-}: {
-  label: string;
-  value: string;
-  href?: string;
-}) {
-  const Content = () => (
-    <div>
-      <div className="text-xs uppercase tracking-wide text-white/70">{label}</div>
-      <div className="text-sm font-medium text-white">{value}</div>
-    </div>
-  );
-
-  if (href) {
-    return (
-      <a href={href} target="_blank" rel="noreferrer" className="block hover:text-white">
-        <Content />
-      </a>
-    );
-  }
-
-  return <Content />;
 }
 
 function Footer() {
   return (
-    <footer
-      id="contacto"
-      className="text-white scroll-mt-24"
-      style={{ background: "#0066CC" }}
-    >
-      <div className="mx-auto max-w-4xl px-4 py-12 md:py-14">
-        <div>
-          <div className="font-extrabold tracking-wide text-sm md:text-base">
-            CONTACTO
-          </div>
-
-          <div className="mt-5 grid gap-4 md:grid-cols-2 md:gap-x-10 md:gap-y-3 text-white/90">
-            <ContactRow
-              label="WhatsApp"
-              value={BRAND.whatsapp}
-              href={waLink(BRAND.whatsapp, `Hola, quiero info de ${BRAND.nameMain}`)}
-            />
-
-            <ContactRow
-              label="PBX"
-              value={`+57 ${BRAND.phone}`}
-              href={`tel:+57${onlyDigits(BRAND.phone)}`}
-            />
-
-            <ContactRow
-              label="Email"
-              value={BRAND.email}
-              href={`mailto:${BRAND.email}`}
-            />
-
-            <ContactRow
-              label="Sede principal"
-              value="Cr 23 # 19-43 Piso 2-3, Barrio San Francisco, Bucaramanga"
-            />
-
-            <ContactRow
-              label="Sede comercial"
-              value="Zona Franca – Campus land"
-            />
-
-            <ContactRow
-              label="Horario"
-              value="Lunes a Viernes: 8am - 5pm"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t border-white/20">
-        <div className="mx-auto max-w-6xl px-4 py-5 text-sm text-white/85">
-          © {new Date().getFullYear()} {BRAND.nameMain}. Todos los derechos
-          reservados.
-        </div>
-      </div>
+    <footer className="footer">
+      <strong>Ruta Empresarial ERP</strong>
+      <span>comercialsomic@somic.com.co · +57 315 760 3419</span>
+      <nav aria-label="Navegación de pie de página">
+        <a href="#inicio">Inicio</a>
+        <a href="#modulos">Módulos</a>
+        <a href="#planes">Planes y Precios</a>
+        <a href="#video">Conoce Ruta Empresarial</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
     </footer>
   );
 }
 
-function FloatingButtons({
-  showTop,
-}: {
-  showTop: boolean;
-}) {
-  return (
-    <>
-      <a
-        href={waLink(BRAND.whatsapp, `Hola, quiero info de ${BRAND.nameMain}`)}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-5 right-5 shadow-lg"
-        aria-label="WhatsApp"
-        title="WhatsApp"
-      >
-        <img
-          src={whatsappLogo}
-          alt="WhatsApp"
-          className="h-12 w-12 object-contain"
-        />
-      </a>
-
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className={cx(
-          "fixed bottom-5 right-24 h-14 w-14 rounded-2xl shadow-lg flex items-center justify-center border transition-opacity",
-          showTop ? "opacity-100" : "opacity-0 pointer-events-none"
-        )}
-        style={{ background: BRAND.colors.secondary, color: "white" }}
-        aria-label="Ir arriba"
-        title="Ir arriba"
-      >
-        ↑
-      </button>
-    </>
-  );
-}
-
-/* ------------------------- APP ------------------------- */
-
 export default function App() {
-  const [showTop, setShowTop] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setShowTop(window.scrollY > 650);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <TopBar />
+    <div className="app-shell">
       <Header />
-
-      {/* Bloque 1: Hero + Formulario */}
+      <MobileActionBar />
       <Hero />
-
-      {/* Bloque 2: Precios */}
-      <PlansSection />
-
-      {/* Bloque 3: Módulos con iconos */}
+      <VideoSection />
+      <LeadForm />
       <ModulesSection />
-
-      {/* Resto */}
-      <DemoSection />
+      <PosErpSection />
+      <PlansSection />
       <TestimonialsSection />
-      <FinalCTA />
+      <FinalCta />
       <Footer />
-
-      <FloatingButtons showTop={showTop} />
     </div>
   );
 }
