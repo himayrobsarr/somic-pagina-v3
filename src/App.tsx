@@ -1,26 +1,27 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import logoRuta from "./assets/logo-ruta-empresarial-horizontal.png";
 import "./App.css";
 
 const CALENDLY_URL = "https://calendly.com/comercialsomic/30min";
 const WHATSAPP_NUMBER = "573157603419";
 const VIDEO_ID = "CyiwIC8laz8";
+const VSL_SECONDS = 90;
 
 const modules = [
   {
     icon: "box",
     title: "Inventarios",
-    text: "Control en tiempo real de productos, precios, ajustes, traslados, kardex y reconteos valorizados.",
+    text: "Control en tiempo real de productos, gestión de precios, ajustes, traslados, kardex y reconteos valorados.",
   },
   {
     icon: "users",
-    title: "Clientes",
-    text: "Crea clientes, genera recibos de caja y mantén la cartera de tu negocio visible y organizada.",
+    title: "Módulo de Clientes",
+    text: "Crea y gestiona clientes fácilmente, genera recibos de caja y mantén tu cartera visible en tiempo real.",
   },
   {
     icon: "truck",
     title: "Proveedores",
-    text: "Gestiona compras, órdenes, remisiones, devoluciones y reportes de rotación desde una sola plataforma.",
+    text: "Ciclo completo de compras: órdenes, remisiones, devoluciones y control de cartera con reportes de rotación.",
   },
   {
     icon: "receipt",
@@ -30,61 +31,106 @@ const modules = [
   {
     icon: "chart",
     title: "Contabilidad",
-    text: "PUC, comprobantes, libros, información exógena, centros de costos y estados financieros integrados.",
+    text: "PUC, comprobantes, libros, exógena, centros de costos, balance general y estado de resultados integrados.",
   },
   {
     icon: "wallet",
     title: "Cartera",
-    text: "Cuentas por cobrar y pagar, vencimientos y reportes para proteger el flujo de caja.",
+    text: "Control de cuentas por cobrar y pagar, análisis de vencimientos y reportes de cartera en tiempo real.",
   },
 ];
 
-const planOne = [
-  "Hasta 5 usuarios simultáneos",
-  "Capacitaciones con evaluaciones programadas",
-  "Acceso al software por internet",
-  "Garantía y soporte de funcionabilidad",
-  "1.000 facturas POS + 200 documentos soporte/mes sin costo adicional",
-  "Firma electrónica y servidor en la nube incluidos",
-  "Ruta Empresarial incluida: diagnóstico, estrategia inicial y optimización de implementación",
+const standardPlan = [
+  {
+    title: "Alcance del Plan",
+    items: [
+      "Hasta 5 usuarios simultáneos",
+      "Capacitaciones con evaluaciones programadas",
+      "Acceso al software por internet",
+      "Garantía y soporte de funcionabilidad",
+      "1.000 facturas POS + 200 documentos soporte/mes sin costo adicional",
+      "Firma electrónica y servidor en la nube incluidos",
+    ],
+  },
+  {
+    title: "Facturación POS + Tradicional + DIAN",
+    items: [
+      "Remisiones, facturación POS y domicilios",
+      "Cotizaciones, pedidos, notas crédito y débito",
+      "Cajas, turnos, descuentos y arqueo de caja",
+      "Reportes de ventas y rentabilidades",
+    ],
+  },
+  {
+    title: "Inventarios + Cartera + Compras + Contabilidad",
+    items: [
+      "Artículos, listas de precios, kardex y traslados",
+      "Gestión de cartera: cuentas por cobrar y pagar",
+      "Control de proveedores y compras",
+      "Movimientos contables",
+    ],
+  },
+  {
+    title: "Ruta Empresarial incluida",
+    items: [
+      "Diagnóstico inicial de tu negocio",
+      "Principios del modelo empresarial de éxito",
+      "Estrategia de acción inicial personalizada",
+      "Optimización de la implementación del POS",
+    ],
+  },
 ];
 
-const planGrowth = [
-  "Más de 5 usuarios simultáneos",
-  "Mayor volumen de facturación electrónica",
-  "Módulos adicionales según tu operación",
-  "Soporte prioritario según cotización",
-  "Acompañamiento estratégico para empresas en crecimiento",
+const growthPlan = [
+  {
+    title: "Ideal si tu empresa necesita",
+    items: [
+      "Más de 5 usuarios simultáneos",
+      "Mayor volumen de facturación electrónica",
+      "Módulos adicionales según tu operación",
+      "Soporte prioritario según cotización",
+      "Acompañamiento estratégico para operaciones de mayor escala",
+    ],
+  },
+  {
+    title: "Ruta Empresarial incluida",
+    items: [
+      "Diagnóstico inicial de tu negocio",
+      "Principios del modelo empresarial de éxito",
+      "Estrategia de acción inicial personalizada",
+      "Optimización de la implementación del POS",
+    ],
+  },
 ];
 
 const testimonials = [
   {
     quote:
-      "Con el POS / ERP logramos digitalizar toda la operación y centralizar la información en una sola plataforma. Hoy controlamos inventario, despachos y facturación en tiempo real.",
+      "Con el POS / ERP logramos digitalizar toda la operación y centralizar la información en una sola plataforma. Hoy controlamos el inventario, los despachos y la facturación en tiempo real.",
     author: "Julio César Ardila",
     role: "Director de Calidad",
-    place: "Neiva, Colombia",
+    place: "Discomedica · Neiva, Colombia",
   },
   {
     quote:
-      "Antes teníamos pérdidas de mercancía que no podíamos explicar. Desde que implementamos el POS / ERP controlamos el inventario en tiempo real y mejoramos la rentabilidad.",
+      "Antes teníamos pérdidas de mercancía que no podíamos explicar. Desde que implementamos el POS / ERP controlamos el inventario en tiempo real. En menos de 90 días mejoramos la rentabilidad.",
     author: "Paula León",
     role: "Administradora",
-    place: "Cúcuta, Colombia",
+    place: "Supermercado Lemcitex · Cúcuta, Colombia",
   },
   {
     quote:
-      "El control de domicilios en tiempo real y el seguimiento al comportamiento del cliente nos dio una diferencia enorme en calidad del servicio.",
+      "Llevamos más de 30 años trabajando con el ERP. El control de domicilios en tiempo real y el seguimiento al comportamiento del cliente nos ha dado una diferencia enorme en calidad del servicio.",
     author: "Marco Tulio Jiménez",
     role: "Representante Legal",
-    place: "Bucaramanga, Colombia",
+    place: "Droguería II Lago · Bucaramanga, Colombia",
   },
   {
     quote:
-      "Ahora tenemos control total de bodega, despachos e inventario. La facturación electrónica integrada con la DIAN nos da tranquilidad.",
+      "Desde que implementamos el POS / ERP tenemos un control total de la bodega, los despachos y el inventario. La facturación electrónica integrada con la DIAN nos da tranquilidad total.",
     author: "Oscar Uribe",
     role: "Representante Legal",
-    place: "Colombia",
+    place: "Confecciones Julio Uribe · Colombia",
   },
 ];
 
@@ -164,111 +210,101 @@ function Icon({ name }: { name: string }) {
 function Header() {
   return (
     <header className="site-header">
-      <a className="brand" href="#inicio" aria-label="Ruta Empresarial">
-        <img src={logoRuta} alt="Ruta Empresarial con POS/ERP" />
+      <a className="brand" href="#inicio" aria-label="Ruta Empresarial ERP">
+        <img src={logoRuta} alt="Ruta Empresarial ERP" />
       </a>
       <nav className="main-nav" aria-label="Navegación principal">
         <a href="#inicio">Inicio</a>
-        <a href="#modulos">Módulos</a>
-        <a href="#pos-erp">POS / ERP</a>
+        <a href="#producto">Módulos POS / ERP</a>
         <a href="#planes">Planes y Precios</a>
-        <a className="nav-highlight" href="#video">
-          Conoce Ruta Empresarial
+        <a href="#contacto">Contacto</a>
+        <a className="nav-highlight" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+          Agendar Reunión
         </a>
       </nav>
     </header>
   );
 }
 
-function MobileActionBar() {
+function UnlockBanner({
+  unlocked,
+  progress,
+  onUnlock,
+}: {
+  unlocked: boolean;
+  progress: number;
+  onUnlock: () => void;
+}) {
   return (
-    <div className="mobile-action-bar" aria-label="Acciones rápidas">
-      <a href="#video">Ver video</a>
-      <a href={CALENDLY_URL} target="_blank" rel="noreferrer">
-        Agendar
-      </a>
+    <div className={`unlock-banner ${unlocked ? "hidden" : ""}`}>
+      <div className="unlock-msg">
+        <span aria-hidden="true">▶</span>
+        <span>Sigue viendo el video para desbloquear el contenido</span>
+      </div>
+      <div className="unlock-track" aria-hidden="true">
+        <div className="unlock-fill" style={{ width: `${progress}%` }} />
+      </div>
+      <span className="unlock-pct">{progress}%</span>
+      <button className="unlock-skip" type="button" onClick={onUnlock}>
+        Omitir
+      </button>
     </div>
   );
 }
 
-function Hero() {
+function Hero({
+  onVideoClick,
+  videoPlaying,
+}: {
+  onVideoClick: () => void;
+  videoPlaying: boolean;
+}) {
   return (
     <section className="hero" id="inicio">
       <div className="hero-grid" aria-hidden="true" />
-      <div className="hero-inner">
-        <div className="hero-content">
-          <p className="eyebrow">POS / ERP con Ruta Empresarial</p>
-          <h1>
-            Tu negocio creció. Es hora de gestionarlo con{" "}
-            <span>
-              <strong>Ruta</strong>
-              <strong>Empresarial</strong>
-            </span>
-          </h1>
-          <p className="hero-copy">
-            Tecnología, estructura y acompañamiento para que vendas, factures,
-            controles inventario y tomes decisiones con información clara.
-          </p>
-          <div className="hero-actions">
-            <a className="primary-btn" href="#video">
-              Ver video
-            </a>
-            <a className="secondary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
-              Agendar reunión estratégica
-            </a>
-          </div>
-        </div>
+      <div className="hero-glow" aria-hidden="true" />
 
-        <aside className="hero-panel" aria-label="Resumen Ruta Empresarial">
-          <div className="panel-video-mark">
-            <span>Video VSL</span>
-            <strong>5-6 min</strong>
-          </div>
-          <h2>Primero entiende la ruta. Luego eliges el plan.</h2>
-          <p>
-            Ve el video en la página y agenda una reunión para revisar tu caso
-            con un asesor.
-          </p>
-          <div className="panel-steps">
-            <span>Diagnóstico</span>
-            <span>POS / ERP</span>
-            <span>Estrategia</span>
-          </div>
-          <a className="panel-link" href="#video">
-            Conoce Ruta Empresarial
-          </a>
-        </aside>
-      </div>
-    </section>
-  );
-}
+      <p className="eyebrow">POS / ERP con Ruta Empresarial</p>
+      <h1>
+        Tu negocio creció. Es hora de gestionarlo con
+        <span>RUTA EMPRESARIAL</span>
+      </h1>
+      <p className="hero-sub">
+        Descubre cómo la combinación de tecnología, estructura y acompañamiento puede transformar la forma en que diriges tu empresa.
+      </p>
 
-function VideoSection() {
-  return (
-    <section className="video-section" id="video">
-      <div className="video-layout">
-        <div className="section-head light">
-          <p className="eyebrow">Conoce Ruta Empresarial</p>
-          <h2>Mira el video antes de elegir tu plan</h2>
-          <p>
-            La idea es que lo veas aquí mismo, sin salir a YouTube, y después
-            puedas agendar una reunión con un asesor.
-          </p>
-          <div className="video-cta">
-            <a className="primary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
-              Agendar reunión estratégica
-            </a>
-            <span>Sin compromisos. Revisamos tu caso y te orientamos.</span>
-          </div>
-        </div>
-        <div className="video-frame">
+      <div className="video-wrap">
+        {videoPlaying ? (
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?rel=0&modestbranding=1&playsinline=1`}
+            src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
             title="Video Ruta Empresarial"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
-        </div>
+        ) : (
+          <button className="video-poster" type="button" onClick={onVideoClick} aria-label="Reproducir video de Ruta Empresarial">
+            <span
+              className="video-thumb"
+              style={{ backgroundImage: `url("https://img.youtube.com/vi/${VIDEO_ID}/maxresdefault.jpg")` }}
+            />
+            <span className="play-layer">
+              <span className="play-ring" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7Z" />
+                </svg>
+              </span>
+              <span className="play-lbl">Ver video completo · 5-6 min</span>
+            </span>
+            <span className="yt-badge">YouTube</span>
+          </button>
+        )}
+      </div>
+
+      <div className="hero-video-cta">
+        <a className="btn-primary" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+          Agendar Reunión Estratégica
+        </a>
+        <p className="hero-foot">Sin compromisos · Sin spam · Solo claridad para tu negocio</p>
       </div>
     </section>
   );
@@ -287,14 +323,19 @@ function LeadForm() {
   const message = useMemo(
     () =>
       [
-        "Hola, vengo de la página web de Ruta Empresarial y quiero más información.",
+        "Hola, vengo de la página web de Ruta Empresarial.",
+        "",
         `Nombre: ${form.name || "N/A"}`,
         `Celular: ${form.phone || "N/A"}`,
-        `Empresa: ${form.company || "N/A"}`,
-        `Ciudad: ${form.city || "N/A"}`,
-        `Email: ${form.email || "N/A"}`,
-        `Usuarios: ${form.users || "N/A"}`,
-      ].join("\n"),
+        form.company ? `Empresa: ${form.company}` : "",
+        form.city ? `Ciudad: ${form.city}` : "",
+        form.email ? `Email: ${form.email}` : "",
+        form.users ? `Usuarios: ${form.users}` : "",
+        "",
+        "Me gustaría conocer más sobre Ruta Empresarial ERP.",
+      ]
+        .filter(Boolean)
+        .join("\n"),
     [form]
   );
 
@@ -308,188 +349,152 @@ function LeadForm() {
   }
 
   return (
-    <section className="contact-band" id="contacto">
-      <form className="lead-form" onSubmit={onSubmit}>
-        <div>
-          <p className="eyebrow">Contacto directo</p>
-          <h2>Cuéntanos sobre tu negocio</h2>
-          <p>
-            Déjanos tus datos y un consultor te contactará para revisar cómo
-            Ruta Empresarial puede ayudarte.
-          </p>
-        </div>
+    <section className="form-section gated" id="contacto">
+      <form className="form-card" onSubmit={onSubmit}>
+        <span className="form-badge">Contacto directo</span>
+        <h2>Cuéntanos sobre tu negocio</h2>
+        <p>Déjanos tus datos y un consultor te contactará para revisar cómo Ruta Empresarial puede ayudarte.</p>
         <div className="form-grid">
-          <input required placeholder="Nombre" value={form.name} onChange={(e) => update("name", e.target.value)} />
-          <input required placeholder="Celular / WhatsApp" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
-          <input className="full" placeholder="Nombre del negocio / empresa" value={form.company} onChange={(e) => update("company", e.target.value)} />
-          <input placeholder="Ciudad" value={form.city} onChange={(e) => update("city", e.target.value)} />
-          <input type="email" placeholder="Email" value={form.email} onChange={(e) => update("email", e.target.value)} />
+          <input required placeholder="Nombre *" value={form.name} onChange={(e) => update("name", e.target.value)} />
+          <input required placeholder="Celular / WhatsApp *" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+          <input className="full" placeholder="Nombre del negocio / empresa (opcional)" value={form.company} onChange={(e) => update("company", e.target.value)} />
+          <input placeholder="Ciudad (opcional)" value={form.city} onChange={(e) => update("city", e.target.value)} />
+          <input type="email" placeholder="Email (opcional)" value={form.email} onChange={(e) => update("email", e.target.value)} />
           <select className="full" value={form.users} onChange={(e) => update("users", e.target.value)}>
             <option value="">¿Cuántos usuarios tendría el sistema?</option>
             <option>1 a 2 usuarios</option>
             <option>3 a 5 usuarios</option>
             <option>Más de 5 usuarios</option>
           </select>
-          <button className="whatsapp-btn full" type="submit">
+          <button className="btn-wa full" type="submit">
             Enviar y continuar por WhatsApp
           </button>
         </div>
+        <p className="form-privacy">Tus datos están seguros. No hacemos spam.</p>
       </form>
+    </section>
+  );
+}
+
+function FirstCta() {
+  return (
+    <section className="cta1 gated" id="cta1">
+      <div className="cta1-inner">
+        <h2>Primero entiende la ruta. Luego eliges el plan.</h2>
+        <p>Agenda una reunión estratégica y revisamos si tu empresa necesita POS, ERP contable o una implementación a la medida.</p>
+        <div className="cta1-btns">
+          <a className="btn-primary" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            Agendar Reunión Estratégica
+          </a>
+          <a
+            className="btn-outline-wa"
+            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial y quiero más información.")}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Escribir por WhatsApp
+          </a>
+        </div>
+      </div>
     </section>
   );
 }
 
 function ModulesSection() {
   return (
-    <section className="content-section" id="modulos">
-      <div className="section-head">
-        <p className="eyebrow">Módulos POS / ERP</p>
-        <h2>Todo lo que necesitas para operar tu empresa</h2>
-        <p>
-          Una plataforma accesible desde internet, pensada para ordenar la
-          operación diaria y conectar las áreas clave del negocio.
-        </p>
-      </div>
-      <div className="module-grid">
-        {modules.map((item) => (
-          <article className="module-card" key={item.title}>
-            <div className="icon-box">
-              <Icon name={item.icon} />
-            </div>
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </article>
-        ))}
+    <section className="product gated" id="producto">
+      <div className="product-inner">
+        <div className="modules-head">
+          <span className="section-eyebrow">POS / ERP · Software</span>
+          <h2>Todo lo que necesitas para operar tu empresa</h2>
+          <p>Una plataforma para ordenar la operación diaria y conectar las áreas clave del negocio.</p>
+        </div>
+
+        <div className="modules">
+          {modules.map((item) => (
+            <article className="mod" key={item.title}>
+              <div className="mod-ico">
+                <Icon name={item.icon} />
+              </div>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="demo-banner">
+          <div>
+            <h3>¿Quieres ver cómo funciona en tu negocio?</h3>
+            <p>Agenda una demo gratuita y te mostramos el sistema en vivo.</p>
+          </div>
+          <a className="btn-demo" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            Agendar Demo Gratuita
+          </a>
+        </div>
       </div>
     </section>
   );
 }
 
-function PosErpSection() {
+function PlanList({ sections }: { sections: { title: string; items: string[] }[] }) {
   return (
-    <section className="split-section" id="pos-erp">
-      <div>
-        <p className="eyebrow">Software + acompañamiento</p>
-        <h2>Ruta Empresarial no es solo un POS</h2>
-        <p>
-          Combina la operación del sistema con una ruta de diagnóstico,
-          estrategia inicial y optimización para que la implementación tenga
-          sentido en el día a día de tu empresa.
-        </p>
-      </div>
-      <div className="proof-list">
-        <div>
-          <strong>1.800+</strong>
-          <span>empresas han usado la plataforma en Colombia</span>
+    <>
+      {sections.map((section) => (
+        <div className="plan-block" key={section.title}>
+          <h4>{section.title}</h4>
+          <ul>
+            {section.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
         </div>
-        <div>
-          <strong>40+</strong>
-          <span>años de desarrollo y evolución del sistema</span>
-        </div>
-        <div>
-          <strong>DIAN</strong>
-          <span>facturación electrónica y documentos soporte integrados</span>
-        </div>
-      </div>
-    </section>
+      ))}
+    </>
   );
 }
 
 function PlansSection() {
-  const [openPlans, setOpenPlans] = useState({
-    standard: false,
-    growth: false,
-  });
-  const standardPreview = planOne.slice(0, 3);
-  const standardMore = planOne.slice(3);
-  const growthPreview = planGrowth.slice(0, 3);
-  const growthMore = planGrowth.slice(3);
-
-  function togglePlan(plan: "standard" | "growth") {
-    setOpenPlans((current) => ({
-      ...current,
-      [plan]: !current[plan],
-    }));
-  }
-
   return (
-    <section className="plans-section" id="planes">
-      <div className="section-head">
-        <p className="eyebrow">Planes y Precios</p>
+    <section className="plans gated" id="planes">
+      <div className="plans-head">
+        <span className="section-eyebrow">Planes y Precios</span>
         <h2>POS / ERP con Ruta Empresarial</h2>
-        <p>Elige el plan según el tamaño y las necesidades de tu empresa.</p>
+        <p>Elige el plan que mejor se adapte al tamaño y necesidades de tu empresa.</p>
       </div>
+
       <div className="plans-grid">
-        <article className={`plan-card featured ${openPlans.standard ? "is-expanded" : ""}`}>
-          <span className="plan-pill">Más popular</span>
-          <h3>POS / ERP contable con Ruta Empresarial</h3>
-          <div className="price">$950.000</div>
-          <p className="period">mensuales · hasta 5 usuarios</p>
-          <ul>
-            {standardPreview.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <div className={`plan-extra ${openPlans.standard ? "open" : ""}`}>
-            <ul>
-              {standardMore.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <button
-            className="plan-toggle"
-            type="button"
-            onClick={() => togglePlan("standard")}
-            aria-expanded={openPlans.standard}
-          >
-            <span>{openPlans.standard ? "Ver menos" : "Ver todo lo incluido"}</span>
-            <span aria-hidden="true">{openPlans.standard ? "↑" : "↓"}</span>
-          </button>
-          <a className="primary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
-            Agendar reunión estratégica
+        <article className="plan featured">
+          <div className="plan-pop">Más popular</div>
+          <div className="plan-name">POS / ERP contable con Ruta Empresarial</div>
+          <div className="plan-price">$950.000</div>
+          <div className="plan-period">/mensuales · hasta 5 usuarios</div>
+          <div className="plan-div" />
+          <PlanList sections={standardPlan} />
+          <a className="plan-cta" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            Agendar Reunión Estratégica
           </a>
-          <p className="note">
-            Servicio excluido de IVA. Software en arriendo de licencia. Sin
-            permanencia mínima.
-          </p>
+          <p className="plan-notes">Servicio excluido de IVA · Software en modalidad arriendo de licencia · Sin permanencia mínima</p>
         </article>
-        <article className={`plan-card dark ${openPlans.growth ? "is-expanded" : ""}`}>
-          <h3>Plan para empresas en crecimiento</h3>
-          <div className="price">Adaptado a tu operación</div>
-          <p className="period">Precio según usuarios, módulos y escala</p>
-          <ul>
-            {growthPreview.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-          <div className={`plan-extra ${openPlans.growth ? "open" : ""}`}>
-            <ul>
-              {growthMore.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+
+        <article className="plan plan-dark">
+          <div className="plan-name">Plan para Empresas en Crecimiento</div>
+          <div className="plan-price">
+            Adaptado a
+            <br />
+            tu operación
           </div>
-          <button
-            className="plan-toggle"
-            type="button"
-            onClick={() => togglePlan("growth")}
-            aria-expanded={openPlans.growth}
-          >
-            <span>{openPlans.growth ? "Ver menos" : "Ver detalles"}</span>
-            <span aria-hidden="true">{openPlans.growth ? "↑" : "↓"}</span>
-          </button>
+          <div className="plan-period">Precio según usuarios, módulos y escala</div>
+          <div className="plan-div" />
+          <PlanList sections={growthPlan} />
           <a
-            className="primary-btn"
-            href={whatsappLink(
-              "Hola, vengo de la página web de Ruta Empresarial. Me interesa el plan para empresas en crecimiento."
-            )}
+            className="plan-cta"
+            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial. Me interesa el plan para empresas en crecimiento y quisiera conocer más información.")}
             target="_blank"
             rel="noreferrer"
           >
             Hablemos de tu caso
           </a>
-          <p className="note">Cotización sin costo. Sin permanencia mínima.</p>
+          <p className="plan-notes">Sin permanencia mínima · Cotización sin costo</p>
         </article>
       </div>
     </section>
@@ -498,20 +503,24 @@ function PlansSection() {
 
 function TestimonialsSection() {
   return (
-    <section className="content-section testimonials">
-      <div className="section-head">
-        <p className="eyebrow">Los empresarios confían en nosotros</p>
+    <section className="testi gated">
+      <div className="testi-head">
+        <span className="section-eyebrow">Los empresarios confían en nosotros</span>
         <h2>Resultados reales en negocios reales</h2>
+        <p>Más de 1.800 empresas en Colombia ya trabajan con este sistema.</p>
       </div>
-      <div className="testimonial-grid">
+
+      <div className="testi-grid">
         {testimonials.map((item) => (
-          <article className="testimonial-card" key={item.author}>
-            <div className="stars">★★★★★</div>
-            <p>“{item.quote}”</p>
-            <strong>{item.author}</strong>
-            <span>
-              {item.role} · {item.place}
-            </span>
+          <article className="tcard" key={item.author}>
+            <div className="tcard-stars">★★★★★</div>
+            <p className="tcard-text">«{item.quote}»</p>
+            <div className="tcard-author">
+              <strong>
+                {item.author} — {item.role}
+              </strong>
+              <span>{item.place}</span>
+            </div>
           </article>
         ))}
       </div>
@@ -521,22 +530,21 @@ function TestimonialsSection() {
 
 function FinalCta() {
   return (
-    <section className="final-cta">
-      <div>
-        <h2>¿Listo para dirigir tu negocio con claridad y estructura?</h2>
-        <p>
-          Agenda una reunión estratégica y descubre cómo Ruta Empresarial puede
-          transformar la gestión de tu empresa.
-        </p>
-        <div className="hero-actions centered">
-          <a className="primary-btn" href={CALENDLY_URL} target="_blank" rel="noreferrer">
-            Agendar reunión estratégica
+    <section className="final gated">
+      <div className="final-inner">
+        <h2>
+          ¿Listo para dirigir tu negocio
+          <br />
+          con <em>claridad y estructura?</em>
+        </h2>
+        <p>Agenda una reunión estratégica con nuestro equipo y descubre cómo Ruta Empresarial puede transformar la gestión de tu empresa.</p>
+        <div className="final-btns">
+          <a className="btn-primary" href={CALENDLY_URL} target="_blank" rel="noreferrer">
+            Agendar Reunión Estratégica
           </a>
           <a
-            className="secondary-btn"
-            href={whatsappLink(
-              "Hola, vengo de la página web de Ruta Empresarial y quiero más información."
-            )}
+            className="btn-sec"
+            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial y quiero más información.")}
             target="_blank"
             rel="noreferrer"
           >
@@ -550,30 +558,62 @@ function FinalCta() {
 
 function Footer() {
   return (
-    <footer className="footer">
-      <strong>Ruta Empresarial ERP</strong>
-      <span>comercialsomic@somic.com.co · +57 315 760 3419</span>
-      <nav aria-label="Navegación de pie de página">
+    <footer className="footer gated">
+      <div className="footer-brand">
+        RUTA EMPRESARIAL <em>ERP</em>
+      </div>
+      <div className="footer-tag">comercialsomic@somic.com.co · +57 315 760 3419</div>
+      <nav className="footer-links" aria-label="Navegación de pie de página">
         <a href="#inicio">Inicio</a>
-        <a href="#modulos">Módulos</a>
+        <a href="#producto">Módulos POS / ERP</a>
         <a href="#planes">Planes y Precios</a>
-        <a href="#video">Conoce Ruta Empresarial</a>
+        <a href="#cta1">Conoce Ruta Empresarial</a>
         <a href="#contacto">Contacto</a>
       </nav>
+      <div className="footer-bottom">© 2026 Ruta Empresarial ERP. Todos los derechos reservados.</div>
     </footer>
   );
 }
 
 export default function App() {
+  const [unlocked, setUnlocked] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+
+  const progress = Math.min(Math.round((elapsed / VSL_SECONDS) * 100), 100);
+
+  useEffect(() => {
+    if (!videoPlaying || unlocked) return undefined;
+
+    const timer = window.setInterval(() => {
+      setElapsed((current) => {
+        const next = current + 1;
+        if (next >= VSL_SECONDS) {
+          setUnlocked(true);
+        }
+        return next;
+      });
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [videoPlaying, unlocked]);
+
+  function watchVideo() {
+    setVideoPlaying(true);
+  }
+
+  function unlockContent() {
+    setUnlocked(true);
+  }
+
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${unlocked ? "" : "vsl-locked"}`}>
       <Header />
-      <MobileActionBar />
-      <Hero />
-      <VideoSection />
+      <Hero onVideoClick={watchVideo} videoPlaying={videoPlaying} />
+      <UnlockBanner unlocked={unlocked} progress={progress} onUnlock={unlockContent} />
       <LeadForm />
+      <FirstCta />
       <ModulesSection />
-      <PosErpSection />
       <PlansSection />
       <TestimonialsSection />
       <FinalCta />
