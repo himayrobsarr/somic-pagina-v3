@@ -559,7 +559,7 @@ function Footer() {
   return (
     <footer className="footer gated">
       <div className="footer-brand">
-        RUTA EMPRESARIAL <em>ERP</em>
+        POS / ERP CON <em>RUTA EMPRESARIAL</em>
       </div>
       <div className="footer-tag">comercialsomic@gmail.com · +57 317 651 4902</div>
       <nav className="footer-links" aria-label="Navegación de pie de página">
