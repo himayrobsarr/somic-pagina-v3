@@ -3,7 +3,7 @@ import logoRuta from "./assets/logo-ruta-empresarial-horizontal.png";
 import "./App.css";
 
 const CALENDLY_URL = "https://calendly.com/comercialsomic/30min";
-const WHATSAPP_NUMBER = "573157603419";
+const WHATSAPP_NUMBER = "573176514902";
 const VIDEO_ID = "CyiwIC8laz8";
 const VSL_SECONDS = 90;
 
@@ -323,14 +323,13 @@ function LeadForm() {
   const message = useMemo(
     () =>
       [
-        "Hola, vengo de la página web de Ruta Empresarial.",
+        "Hola, me interesó conocer más de Ruta Empresarial:",
         "",
         `Nombre: ${form.name || "N/A"}`,
         `Celular: ${form.phone || "N/A"}`,
-        form.company ? `Empresa: ${form.company}` : "",
-        form.city ? `Ciudad: ${form.city}` : "",
-        form.email ? `Email: ${form.email}` : "",
-        form.users ? `Usuarios: ${form.users}` : "",
+        `Empresa: ${form.company || "N/A"}`,
+        `Ciudad: ${form.city || "N/A"}`,
+        `Usuarios: ${form.users || "N/A"}`,
         "",
         "Me gustaría conocer más sobre Ruta Empresarial ERP.",
       ]
@@ -362,9 +361,9 @@ function LeadForm() {
           <input type="email" placeholder="Email (opcional)" value={form.email} onChange={(e) => update("email", e.target.value)} />
           <select className="full" value={form.users} onChange={(e) => update("users", e.target.value)}>
             <option value="">¿Cuántos usuarios tendría el sistema?</option>
-            <option>1 a 2 usuarios</option>
-            <option>3 a 5 usuarios</option>
-            <option>Más de 5 usuarios</option>
+            <option>1 a 5 usuarios</option>
+            <option>5 a 20 usuarios</option>
+            <option>Más de 20 usuarios</option>
           </select>
           <button className="btn-wa full" type="submit">
             Enviar y continuar por WhatsApp
@@ -388,7 +387,7 @@ function FirstCta() {
           </a>
           <a
             className="btn-outline-wa"
-            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial y quiero más información.")}
+            href={whatsappLink("Hola, vi la página web de Ruta Empresarial y me interesa conocer más sobre la herramienta.")}
             target="_blank"
             rel="noreferrer"
           >
@@ -406,8 +405,8 @@ function ModulesSection() {
       <div className="product-inner">
         <div className="modules-head">
           <span className="section-eyebrow">POS / ERP · Software</span>
-          <h2>Todo lo que necesitas para operar tu empresa</h2>
-          <p>Una plataforma para ordenar la operación diaria y conectar las áreas clave del negocio.</p>
+          <h2>¿Quieres entender como Ruta Empresarial puede funcionar para tu negocio?</h2>
+          <p>Una herramienta accesible desde internet, utilizada por más de 11.000 usuarios en Colombia y con más de 40 años de desarrollo.</p>
         </div>
 
         <div className="modules">
@@ -458,7 +457,7 @@ function PlansSection() {
     <section className="plans gated" id="planes">
       <div className="plans-head">
         <span className="section-eyebrow">Planes y Precios</span>
-        <h2>POS / ERP con Ruta Empresarial</h2>
+        <h2>POS / ERP CON RUTA EMPRESARIAL</h2>
         <p>Elige el plan que mejor se adapte al tamaño y necesidades de tu empresa.</p>
       </div>
 
@@ -488,7 +487,7 @@ function PlansSection() {
           <PlanList sections={growthPlan} />
           <a
             className="plan-cta"
-            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial. Me interesa el plan para empresas en crecimiento y quisiera conocer más información.")}
+            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial, me interesa el plan para empresas en crecimiento y adaptado a mi operación.")}
             target="_blank"
             rel="noreferrer"
           >
@@ -544,7 +543,7 @@ function FinalCta() {
           </a>
           <a
             className="btn-sec"
-            href={whatsappLink("Hola, vengo de la página web de Ruta Empresarial y quiero más información.")}
+            href={whatsappLink("Hola, vi la página web de Ruta Empresarial y me interesa conocer más sobre la herramienta.")}
             target="_blank"
             rel="noreferrer"
           >
@@ -562,7 +561,7 @@ function Footer() {
       <div className="footer-brand">
         RUTA EMPRESARIAL <em>ERP</em>
       </div>
-      <div className="footer-tag">comercialsomic@somic.com.co · +57 315 760 3419</div>
+      <div className="footer-tag">comercialsomic@gmail.com · +57 317 651 4902</div>
       <nav className="footer-links" aria-label="Navegación de pie de página">
         <a href="#inicio">Inicio</a>
         <a href="#producto">Módulos POS / ERP</a>
