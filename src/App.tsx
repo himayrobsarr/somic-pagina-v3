@@ -379,7 +379,7 @@ function FirstCta() {
   return (
     <section className="cta1 gated" id="cta1">
       <div className="cta1-inner">
-        <h2>Primero entiende la ruta. Luego eliges el plan.</h2>
+        <h2>¿Quieres entender cómo Ruta Empresarial puede funcionar para tu negocio?</h2>
         <p>Agenda una reunión estratégica y revisamos si tu empresa necesita POS, ERP contable o una implementación a la medida.</p>
         <div className="cta1-btns">
           <a className="btn-primary" href={CALENDLY_URL} target="_blank" rel="noreferrer">
@@ -405,8 +405,8 @@ function ModulesSection() {
       <div className="product-inner">
         <div className="modules-head">
           <span className="section-eyebrow">POS / ERP · Software</span>
-          <h2>¿Quieres entender como Ruta Empresarial puede funcionar para tu negocio?</h2>
-          <p>Una herramienta accesible desde internet, utilizada por más de 11.000 usuarios en Colombia y con más de 40 años de desarrollo.</p>
+          <h2>Todo lo que necesitas para operar tu empresa</h2>
+          <p>Una plataforma accesible desde internet, utilizada por más de 1.800 empresas en Colombia, con más de 40 años de desarrollo.</p>
         </div>
 
         <div className="modules">
