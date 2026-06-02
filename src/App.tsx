@@ -561,7 +561,7 @@ function Footer() {
       <div className="footer-brand">
         POS / ERP CON <em>RUTA EMPRESARIAL</em>
       </div>
-      <div className="footer-tag">comercialsomic@gmail.com · +57 317 651 4902</div>
+      <div className="footer-tag">comercial@somicsoluciones.com · +57 317 651 4902</div>
       <nav className="footer-links" aria-label="Navegación de pie de página">
         <a href="#inicio">Inicio</a>
         <a href="#producto">Módulos POS / ERP</a>
